@@ -42,6 +42,13 @@ Our [tutorials](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchai
 TPC is our way of describing the hardware that will be used to run and infer with models that are optimized using the MCT.
 The TPC includes different parameters that are relevant to the hardware during inference (e.g., number of bits used in some operator for its weights/activations, fusing patterns, etc.)
 
+<div align="center" markdown="1">
+<p>
+      <a href="https://sony.github.io/model_optimization/" target="_blank">
+        <img src="/ai_toolchain_tpc/docsrc/images/tpc_arch.png" width="400"></a>
+</p>
+</div>
+
 The default target-platform model is [imx500tpc v1]((./tpc_models/imx500_tpc/v1/tpc.py)), quantizes activations using 8 bits with power-of-two thresholds for activations and symmetric threshold for weights.
 For mixed-precision quantization it uses either 2, 4, or 8 bits for quantizing the operators.
 
