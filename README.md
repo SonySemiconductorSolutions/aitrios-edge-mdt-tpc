@@ -6,6 +6,7 @@
   
 ______________________________________________________________________
 
+
 <p align="center">
   <a href="https://sony.github.io/model_optimization#prerequisites"><img src="https://img.shields.io/badge/pytorch-2.1%20%7C%202.2%20%7C%202.3%20%7C%202.4%20%7C%202.5-blue" /></a>
   <a href="https://sony.github.io/model_optimization#prerequisites"><img src="https://img.shields.io/badge/TensorFlow-2.12%20%7C%202.13%20%7C%202.14%20%7C%202.15-blue" /></a>
@@ -15,6 +16,8 @@ ______________________________________________________________________
   
  </p>    
 </div>
+
+__________________________________________________________________________________________________________
 
 ## <div align="center">Getting Started</div>
 ### Quick Installation
