@@ -23,13 +23,6 @@ def read_install_requires():
     return [r.split('\n')[0] for r in open('requirements.txt', 'r').readlines()]
 
 
-def get_log_description():
-    print("Reading READEME File")
-    with open("README.md", "r") as fh:
-        long_description = fh.read()
-    return long_description
-
-
 def get_release_arguments():
     argparser = argparse.ArgumentParser(add_help=False)
     args, unknown = argparser.parse_known_args()
@@ -38,16 +31,5 @@ def get_release_arguments():
 
 
 args = get_release_arguments()
-setup(name='ai_toolchain_tpc',
-      long_description=get_log_description(),
-      long_description_content_type="text/markdown",
-      description='',
-      packages=find_packages(include=["ai_toolchain_tpc", "ai_toolchain_tpc.*"]),
-      classifiers=[
-          "Programming Language :: Python :: 3",
-          "License :: OSI Approved :: Apache Software License",
-          "Operating System :: OS Independent",
-          "Topic :: Scientific/Engineering :: Artificial Intelligence"
-      ],
-      install_requires=read_install_requires()
-      )
+setup(packages=find_packages(include=["ai_toolchain_tpc", "ai_toolchain_tpc.*"], exclude=["*tests*"]),
+      install_requires=read_install_requires())
