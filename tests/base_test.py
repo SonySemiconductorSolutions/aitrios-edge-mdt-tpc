@@ -9,7 +9,7 @@ from torchvision.models import mobilenet_v2
 
 import model_compression_toolkit as mct
 
-from ai_toolchain_tpc.get_tpc import get_target_platform_capabilities
+from ai_toolchain_tpc import get_target_platform_capabilities
 
 
 class BaseModelTest:
