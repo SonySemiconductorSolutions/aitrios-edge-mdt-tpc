@@ -12,24 +12,3 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-
-import argparse
-import sys
-from setuptools import setup, find_packages
-
-
-def read_install_requires():
-    print("Reading install requirements")
-    return [r.split('\n')[0] for r in open('requirements.txt', 'r').readlines()]
-
-
-def get_release_arguments():
-    argparser = argparse.ArgumentParser(add_help=False)
-    args, unknown = argparser.parse_known_args()
-    sys.argv = [sys.argv[0]] + unknown
-    return args
-
-
-args = get_release_arguments()
-setup(packages=find_packages(include=["ai_toolchain_tpc", "ai_toolchain_tpc.*"], exclude=["*tests*"]),
-      install_requires=read_install_requires())
