@@ -20,32 +20,34 @@ from model_compression_toolkit.target_platform_capabilities.schema.mct_current_s
 
 def get_target_platform_capabilities(tpc_version: str,
                                      device_type: str,
-                                     schema_version: str = 'schema_v1',
                                      extended_version: Optional[str] = None) -> TargetPlatformCapabilities:
     """
-    Retrieves target platform capabilities model based on the specified device type, schema version and tpc version.
+    Retrieves target platform capabilities model based on the specified device type and tpc version.
 
     Args:
         tpc_version (str): The version of the TPC to use.
         device_type (str): The type of device for the target platform.
-        schema_version (str): The schema version to use (default: 'schema_v1').
         extended_version (Optional[str]): An optional extended version identifier.
 
     Returns:
         TargetPlatformCapabilities: The hardware configuration used for quantized model inference.
     """
 
-    # Generate a dictionary containing schemas configurations for the specified device type.
-    device_dict = generate_device_type(device_type=device_type)
+    # TODO:
+    # Regex on versions?
+    #   int +/- extended
+    #   float +/- extended
+    #   str combined from int/float and extended
+    # Latest version?
 
-    # Generate a dictionary containing target platform configurations for the specified schema version.
-    schema_dict = device_dict(schema_version=schema_version)
+    # Generate a dictionary containing tpcs configurations for the specified device type.
+    device_dict = generate_device_type(device_type=device_type)
 
     # Add the extended version tag if existed.
     if extended_version is not None:
         tpc_version = tpc_version + '_' + extended_version
 
     # Get the target platform model for the tpc version.
-    tpc = schema_dict(tpc_version=tpc_version)
+    tpc = device_dict(tpc_version=tpc_version)
 
     return tpc

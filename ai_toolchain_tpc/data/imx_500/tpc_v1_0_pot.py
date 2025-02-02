@@ -14,17 +14,21 @@
 # ==============================================================================
 from typing import List, Tuple
 
-import model_compression_toolkit.target_platform_capabilities.schema.mct_current_schema as schema
+import model_compression_toolkit.target_platform_capabilities.schema.v1 as schema
 from mct_quantizers import QuantizationMethod
-from model_compression_toolkit.constants import FLOAT_BITWIDTH
-from model_compression_toolkit.target_platform_capabilities.constants import KERNEL_ATTR, BIAS_ATTR, WEIGHTS_N_BITS, \
-    IMX500_TP_MODEL
-from model_compression_toolkit.target_platform_capabilities.schema.mct_current_schema import TargetPlatformCapabilities, \
-    Signedness, \
-    AttributeQuantizationConfig, OpQuantizationConfig
+
+# Default bitwidth for disabled quantization candidate.
+FLOAT_BITWIDTH = 32
+
+# TP Attributes.
+KERNEL_ATTR = "kernel_attr"
+BIAS_ATTR = "bias_attr"
+
+WEIGHTS_N_BITS = 'weights_n_bits'
+IMX500_TP_MODEL = 'imx500'
 
 
-def get_tp_model() -> TargetPlatformCapabilities:
+def get_tp_model() -> schema.TargetPlatformCapabilities:
     """
     A method that generates a default target platform model, with base 8-bit quantization configuration and 8, 4, 2
     bits configuration list for mixed-precision quantization.
@@ -39,12 +43,14 @@ def get_tp_model() -> TargetPlatformCapabilities:
     return generate_tp_model(default_config=default_config,
                              base_config=base_config,
                              mixed_precision_cfg_list=mixed_precision_cfg_list,
-                             name='imx500_tp_model')
+                             name='imx500_pot_tp_model')
 
 
-def get_op_quantization_configs() -> Tuple[OpQuantizationConfig, List[OpQuantizationConfig], OpQuantizationConfig]:
+def get_op_quantization_configs() -> (
+        Tuple)[schema.OpQuantizationConfig, List[schema.OpQuantizationConfig], schema.OpQuantizationConfig]:
     """
-    Creates a default configuration object for 8-bit quantization, to be used to set a default TargetPlatformCapabilities.
+    Creates a default configuration object for 8-bit quantization, to be used to set a default
+    TargetPlatformCapabilities.
     In addition, creates a default configuration objects list (with 8, 4 and 2 bit quantization) to be used as
     default configuration for mixed-precision quantization.
 
@@ -52,24 +58,24 @@ def get_op_quantization_configs() -> Tuple[OpQuantizationConfig, List[OpQuantiza
 
     """
 
-    # define a default quantization config for all non-specified weights attributes.
-    default_weight_attr_config = AttributeQuantizationConfig(
+    # We define a default quantization config for all non-specified weights attributes.
+    default_weight_attr_config = schema.AttributeQuantizationConfig(
         weights_quantization_method=QuantizationMethod.POWER_OF_TWO,
         weights_n_bits=8,
         weights_per_channel_threshold=False,
         enable_weights_quantization=False,
         lut_values_bitwidth=None)
 
-    # define a quantization config to quantize the kernel (for layers where there is a kernel attribute).
-    kernel_base_config = AttributeQuantizationConfig(
-        weights_quantization_method=QuantizationMethod.SYMMETRIC,
+    # We define a quantization config to quantize the kernel (for layers where there is a kernel attribute).
+    kernel_base_config = schema.AttributeQuantizationConfig(
+        weights_quantization_method=QuantizationMethod.POWER_OF_TWO,
         weights_n_bits=8,
         weights_per_channel_threshold=True,
         enable_weights_quantization=True,
         lut_values_bitwidth=None)
 
-    # define a quantization config to quantize the bias (for layers where there is a bias attribute).
-    bias_config = AttributeQuantizationConfig(
+    # We define a quantization config to quantize the bias (for layers where there is a bias attribute).
+    bias_config = schema.AttributeQuantizationConfig(
         weights_quantization_method=QuantizationMethod.POWER_OF_TWO,
         weights_n_bits=FLOAT_BITWIDTH,
         weights_per_channel_threshold=False,
@@ -93,13 +99,13 @@ def get_op_quantization_configs() -> Tuple[OpQuantizationConfig, List[OpQuantiza
         fixed_scale=None,
         fixed_zero_point=None,
         simd_size=32,
-        signedness=Signedness.AUTO)
+        signedness=schema.Signedness.AUTO)
 
     # We define an 8-bit config for linear operations quantization, that include a kernel and bias attributes.
     linear_eight_bits = schema.OpQuantizationConfig(
+        activation_quantization_method=QuantizationMethod.POWER_OF_TWO,
         default_weight_attr_config=default_weight_attr_config,
         attr_weights_configs_mapping={KERNEL_ATTR: kernel_base_config, BIAS_ATTR: bias_config},
-        activation_quantization_method=QuantizationMethod.POWER_OF_TWO,
         activation_n_bits=8,
         supported_input_activation_n_bits=8,
         enable_activation_quantization=True,
@@ -107,7 +113,7 @@ def get_op_quantization_configs() -> Tuple[OpQuantizationConfig, List[OpQuantiza
         fixed_scale=None,
         fixed_zero_point=None,
         simd_size=32,
-        signedness=Signedness.AUTO)
+        signedness=schema.Signedness.AUTO)
 
     # To quantize a model using mixed-precision, create
     # a list with more than one OpQuantizationConfig.
@@ -118,23 +124,23 @@ def get_op_quantization_configs() -> Tuple[OpQuantizationConfig, List[OpQuantiza
                                                  simd_size=linear_eight_bits.simd_size * 2)
     two_bits = linear_eight_bits.clone_and_edit(attr_to_edit={KERNEL_ATTR: {WEIGHTS_N_BITS: 2}},
                                                 simd_size=linear_eight_bits.simd_size * 4)
-
     mixed_precision_cfg_list = [linear_eight_bits, four_bits, two_bits]
 
     return linear_eight_bits, mixed_precision_cfg_list, eight_bits_default
 
 
-def generate_tp_model(default_config: OpQuantizationConfig,
-                      base_config: OpQuantizationConfig,
-                      mixed_precision_cfg_list: List[OpQuantizationConfig],
-                      name: str) -> TargetPlatformCapabilities:
+def generate_tp_model(default_config: schema.OpQuantizationConfig,
+                      base_config: schema.OpQuantizationConfig,
+                      mixed_precision_cfg_list: List[schema.OpQuantizationConfig],
+                      name: str) -> schema.TargetPlatformCapabilities:
     """
     Generates TargetPlatformCapabilities with default defined Operators Sets, based on the given base configuration and
     mixed-precision configurations options list.
 
     Args
         default_config: A default OpQuantizationConfig to set as the TP model default configuration.
-        base_config: An OpQuantizationConfig to set as the TargetPlatformCapabilities base configuration for mixed-precision purposes only.
+        base_config: An OpQuantizationConfig to set as the TargetPlatformCapabilities base configuration for
+        mixed-precision purposes only.
         mixed_precision_cfg_list: A list of OpQuantizationConfig to be used as the TP model mixed-precision
             quantization configuration options.
         name: The name of the TargetPlatformCapabilities.
@@ -146,11 +152,12 @@ def generate_tp_model(default_config: OpQuantizationConfig,
     # of possible configurations to consider when quantizing a set of operations (in mixed-precision, for example).
     # If the QuantizationConfigOptions contains only one configuration,
     # this configuration will be used for the operation quantization:
-    default_configuration_options = schema.QuantizationConfigOptions(quantization_configurations=tuple([default_config]))
+    default_configuration_options = schema.QuantizationConfigOptions(
+        quantization_configurations=tuple([default_config]))
 
     # Create Mixed-Precision quantization configuration options from the given list of OpQuantizationConfig objects
-    mixed_precision_configuration_options = schema.QuantizationConfigOptions(quantization_configurations=tuple(mixed_precision_cfg_list),
-                                                                             base_config=base_config)
+    mixed_precision_configuration_options = schema.QuantizationConfigOptions(
+        quantization_configurations=tuple(mixed_precision_cfg_list), base_config=base_config)
 
     # Create an OperatorsSet to represent a set of operations.
     # Each OperatorsSet has a unique label.
@@ -163,36 +170,64 @@ def generate_tp_model(default_config: OpQuantizationConfig,
     no_quantization_config = (default_configuration_options.clone_and_edit(enable_activation_quantization=False)
                               .clone_and_edit_weight_attribute(enable_weights_quantization=False))
 
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.STACK, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.UNSTACK, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.DROPOUT, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.FLATTEN, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.SPLIT_CHUNK, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.GET_ITEM, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.RESHAPE, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.UNSQUEEZE, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.BATCH_NORM, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.SIZE, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.PERMUTE, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.TRANSPOSE, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.EQUAL, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.ARGMAX, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.GATHER, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.TOPK, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.SQUEEZE, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.MAXPOOL, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.PAD, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.ZERO_PADDING2D, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.CAST, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.COMBINED_NON_MAX_SUPPRESSION, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.FAKE_QUANT, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.SSD_POST_PROCESS, qc_options=no_quantization_config))
+    operator_set.append(
+        schema.OperatorsSet(name=schema.OperatorSetNames.STACK, qc_options=no_quantization_config))
+    operator_set.append(
+        schema.OperatorsSet(name=schema.OperatorSetNames.UNSTACK, qc_options=no_quantization_config))
+    operator_set.append(
+        schema.OperatorsSet(name=schema.OperatorSetNames.DROPOUT, qc_options=no_quantization_config))
+    operator_set.append(
+        schema.OperatorsSet(name=schema.OperatorSetNames.FLATTEN, qc_options=no_quantization_config))
+    operator_set.append(
+        schema.OperatorsSet(name=schema.OperatorSetNames.SPLIT_CHUNK, qc_options=no_quantization_config))
+    operator_set.append(
+        schema.OperatorsSet(name=schema.OperatorSetNames.GET_ITEM, qc_options=no_quantization_config))
+    operator_set.append(
+        schema.OperatorsSet(name=schema.OperatorSetNames.RESHAPE, qc_options=no_quantization_config))
+    operator_set.append(
+        schema.OperatorsSet(name=schema.OperatorSetNames.UNSQUEEZE, qc_options=no_quantization_config))
+    operator_set.append(
+        schema.OperatorsSet(name=schema.OperatorSetNames.BATCH_NORM, qc_options=no_quantization_config))
+    operator_set.append(
+        schema.OperatorsSet(name=schema.OperatorSetNames.SIZE, qc_options=no_quantization_config))
+    operator_set.append(
+        schema.OperatorsSet(name=schema.OperatorSetNames.PERMUTE, qc_options=no_quantization_config))
+    operator_set.append(
+        schema.OperatorsSet(name=schema.OperatorSetNames.TRANSPOSE, qc_options=no_quantization_config))
+    operator_set.append(
+        schema.OperatorsSet(name=schema.OperatorSetNames.EQUAL, qc_options=no_quantization_config))
+    operator_set.append(
+        schema.OperatorsSet(name=schema.OperatorSetNames.ARGMAX, qc_options=no_quantization_config))
+    operator_set.append(
+        schema.OperatorsSet(name=schema.OperatorSetNames.GATHER, qc_options=no_quantization_config))
+    operator_set.append(
+        schema.OperatorsSet(name=schema.OperatorSetNames.TOPK, qc_options=no_quantization_config))
+    operator_set.append(
+        schema.OperatorsSet(name=schema.OperatorSetNames.SQUEEZE, qc_options=no_quantization_config))
+    operator_set.append(
+        schema.OperatorsSet(name=schema.OperatorSetNames.MAXPOOL, qc_options=no_quantization_config))
+    operator_set.append(
+        schema.OperatorsSet(name=schema.OperatorSetNames.PAD, qc_options=no_quantization_config))
+    operator_set.append(
+        schema.OperatorsSet(name=schema.OperatorSetNames.ZERO_PADDING2D, qc_options=no_quantization_config))
+    operator_set.append(
+        schema.OperatorsSet(name=schema.OperatorSetNames.CAST, qc_options=no_quantization_config))
+    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.COMBINED_NON_MAX_SUPPRESSION,
+                                            qc_options=no_quantization_config))
+    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.FAKE_QUANT,
+                                            qc_options=no_quantization_config))
+    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.SSD_POST_PROCESS,
+                                            qc_options=no_quantization_config))
 
     # Define operator sets that use mixed_precision_configuration_options:
-    conv = schema.OperatorsSet(name=schema.OperatorSetNames.CONV, qc_options=mixed_precision_configuration_options)
-    conv_transpose = schema.OperatorsSet(name=schema.OperatorSetNames.CONV_TRANSPOSE, qc_options=mixed_precision_configuration_options)
-    depthwise_conv = schema.OperatorsSet(name=schema.OperatorSetNames.DEPTHWISE_CONV, qc_options=mixed_precision_configuration_options)
-    fc = schema.OperatorsSet(name=schema.OperatorSetNames.FULLY_CONNECTED, qc_options=mixed_precision_configuration_options)
+    conv = schema.OperatorsSet(name=schema.OperatorSetNames.CONV,
+                               qc_options=mixed_precision_configuration_options)
+    conv_transpose = schema.OperatorsSet(name=schema.OperatorSetNames.CONV_TRANSPOSE,
+                                         qc_options=mixed_precision_configuration_options)
+    depthwise_conv = schema.OperatorsSet(name=schema.OperatorSetNames.DEPTHWISE_CONV,
+                                         qc_options=mixed_precision_configuration_options)
+    fc = schema.OperatorsSet(name=schema.OperatorSetNames.FULLY_CONNECTED,
+                             qc_options=mixed_precision_configuration_options)
 
     # Define operations sets without quantization configuration
     # options (useful for creating fusing patterns, for example):
@@ -210,15 +245,19 @@ def generate_tp_model(default_config: OpQuantizationConfig,
     tanh = schema.OperatorsSet(name=schema.OperatorSetNames.TANH)
     hard_tanh = schema.OperatorsSet(name=schema.OperatorSetNames.HARD_TANH)
 
-    operator_set.extend([conv, conv_transpose, depthwise_conv, fc, relu, relu6, leaky_relu, add, sub, mul, div, prelu, swish,
-                         hard_swish, sigmoid, tanh, hard_tanh])
+    operator_set.extend(
+        [conv, conv_transpose, depthwise_conv, fc, relu, relu6, leaky_relu, add, sub, mul, div, prelu, swish,
+         hard_swish, sigmoid,
+         tanh, hard_tanh])
     any_relu = schema.OperatorSetGroup(operators_set=[relu, relu6, leaky_relu, hard_tanh])
     # Combine multiple operators into a single operator to avoid quantization between
     # them. To do this we define fusing patterns using the OperatorsSets that were created.
     # To group multiple sets with regard to fusing, an OperatorSetGroup can be created
-    activations_after_conv_to_fuse = schema.OperatorSetGroup(operators_set=[relu, relu6, leaky_relu, hard_tanh, swish, hard_swish, prelu, sigmoid, tanh])
+    activations_after_conv_to_fuse = schema.OperatorSetGroup(
+        operators_set=[relu, relu6, leaky_relu, hard_tanh, swish, hard_swish, prelu, sigmoid, tanh])
     conv_types = schema.OperatorSetGroup(operators_set=[conv, conv_transpose, depthwise_conv])
-    activations_after_fc_to_fuse = schema.OperatorSetGroup(operators_set=[relu, relu6, leaky_relu, hard_tanh, swish, hard_swish, sigmoid])
+    activations_after_fc_to_fuse = schema.OperatorSetGroup(
+        operators_set=[relu, relu6, leaky_relu, hard_tanh, swish, hard_swish, sigmoid])
     any_binary = schema.OperatorSetGroup(operators_set=[add, sub, mul, div])
 
     # ------------------- #
@@ -231,14 +270,14 @@ def generate_tp_model(default_config: OpQuantizationConfig,
     # Create a TargetPlatformCapabilities and set its default quantization config.
     # This default configuration will be used for all operations
     # unless specified otherwise (see OperatorsSet, for example):
-    generated_tpc = schema.TargetPlatformCapabilities(
+    generated_tpm = schema.TargetPlatformCapabilities(
         default_qco=default_configuration_options,
         tpc_minor_version=1,
         tpc_patch_version=0,
         tpc_platform_type=IMX500_TP_MODEL,
         operator_set=tuple(operator_set),
         fusing_patterns=tuple(fusing_patterns),
+        add_metadata=True,
         name=name,
-        add_metadata=False,
         is_simd_padding=True)
-    return generated_tpc
+    return generated_tpm

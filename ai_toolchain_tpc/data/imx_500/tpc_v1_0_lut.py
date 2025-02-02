@@ -14,24 +14,28 @@
 # ==============================================================================
 from typing import List, Tuple
 
-import model_compression_toolkit.target_platform_capabilities.schema.mct_current_schema as schema
+import model_compression_toolkit.target_platform_capabilities.schema.v1 as schema
 from mct_quantizers import QuantizationMethod
-from model_compression_toolkit.constants import FLOAT_BITWIDTH
-from model_compression_toolkit.target_platform_capabilities.constants import KERNEL_ATTR, BIAS_ATTR, WEIGHTS_N_BITS, \
-    WEIGHTS_QUANTIZATION_METHOD, IMX500_TP_MODEL
-from model_compression_toolkit.target_platform_capabilities.schema.mct_current_schema import TargetPlatformCapabilities, \
-    Signedness, \
-    AttributeQuantizationConfig, OpQuantizationConfig
+
+# Default bitwidth for disabled quantization candidate.
+FLOAT_BITWIDTH = 32
+
+# TP Attributes.
+KERNEL_ATTR = "kernel_attr"
+BIAS_ATTR = "bias_attr"
+
+WEIGHTS_N_BITS = 'weights_n_bits'
+WEIGHTS_QUANTIZATION_METHOD = 'weights_quantization_method'
+IMX500_TP_MODEL = 'imx500'
 
 
-def get_tp_model() -> TargetPlatformCapabilities:
+def get_tp_model() -> schema.TargetPlatformCapabilities:
     """
     A method that generates a default target platform model, with base 8-bit quantization configuration and 8, 4, 2
     bits configuration list for mixed-precision quantization.
     NOTE: in order to generate a target platform model with different configurations but with the same Operators Sets
     (for tests, experiments, etc.), use this method implementation as a test-case, i.e., override the
     'get_op_quantization_configs' method and use its output to call 'generate_tp_model' with your configurations.
-    This version enables metadata by default.
 
     Returns: A TargetPlatformCapabilities object.
 
@@ -43,10 +47,11 @@ def get_tp_model() -> TargetPlatformCapabilities:
                              name='imx500_lut_tp_model')
 
 
-def get_op_quantization_configs() -> \
-        Tuple[OpQuantizationConfig, List[OpQuantizationConfig], OpQuantizationConfig]:
+def get_op_quantization_configs() -> (
+        Tuple)[schema.OpQuantizationConfig, List[schema.OpQuantizationConfig], schema.OpQuantizationConfig]:
     """
-    Creates a default configuration object for 8-bit quantization, to be used to set a default TargetPlatformCapabilities.
+    Creates a default configuration object for 8-bit quantization, to be used to set a default
+    TargetPlatformCapabilities.
     In addition, creates a default configuration objects list (with 8, 4 and 2 bit quantization) to be used as
     default configuration for mixed-precision quantization with non-uniform quantizer for 2 and 4 bit candidates.
 
@@ -55,15 +60,15 @@ def get_op_quantization_configs() -> \
     """
 
     # We define a default quantization config for all non-specified weights attributes.
-    default_weight_attr_config = AttributeQuantizationConfig(
+    default_weight_attr_config = schema.AttributeQuantizationConfig(
         weights_quantization_method=QuantizationMethod.POWER_OF_TWO,
         weights_n_bits=8,
         weights_per_channel_threshold=False,
         enable_weights_quantization=False,
         lut_values_bitwidth=None)
 
-    # define a quantization config to quantize the kernel (for layers where there is a kernel attribute).
-    kernel_base_config = AttributeQuantizationConfig(
+    # We define a quantization config to quantize the kernel (for layers where there is a kernel attribute).
+    kernel_base_config = schema.AttributeQuantizationConfig(
         weights_quantization_method=QuantizationMethod.SYMMETRIC,
         weights_n_bits=8,
         weights_per_channel_threshold=True,
@@ -71,7 +76,7 @@ def get_op_quantization_configs() -> \
         lut_values_bitwidth=None)
 
     # We define a quantization config to quantize the bias (for layers where there is a bias attribute).
-    bias_config = AttributeQuantizationConfig(
+    bias_config = schema.AttributeQuantizationConfig(
         weights_quantization_method=QuantizationMethod.POWER_OF_TWO,
         weights_n_bits=FLOAT_BITWIDTH,
         weights_per_channel_threshold=False,
@@ -95,7 +100,7 @@ def get_op_quantization_configs() -> \
         fixed_scale=None,
         fixed_zero_point=None,
         simd_size=32,
-        signedness=Signedness.AUTO)
+        signedness=schema.Signedness.AUTO)
 
     # We define an 8-bit config for linear operations quantization, that include a kernel and bias attributes.
     linear_eight_bits = schema.OpQuantizationConfig(
@@ -109,7 +114,7 @@ def get_op_quantization_configs() -> \
         fixed_scale=None,
         fixed_zero_point=None,
         simd_size=32,
-        signedness=Signedness.AUTO)
+        signedness=schema.Signedness.AUTO)
 
     # To quantize a model using mixed-precision, create
     # a list with more than one OpQuantizationConfig.
@@ -129,17 +134,18 @@ def get_op_quantization_configs() -> \
     return linear_eight_bits, mixed_precision_cfg_list, eight_bits_default
 
 
-def generate_tp_model(default_config: OpQuantizationConfig,
-                      base_config: OpQuantizationConfig,
-                      mixed_precision_cfg_list: List[OpQuantizationConfig],
-                      name: str) -> TargetPlatformCapabilities:
+def generate_tp_model(default_config: schema.OpQuantizationConfig,
+                      base_config: schema.OpQuantizationConfig,
+                      mixed_precision_cfg_list: List[schema.OpQuantizationConfig],
+                      name: str) -> schema.TargetPlatformCapabilities:
     """
     Generates TargetPlatformCapabilities with default defined Operators Sets, based on the given base configuration and
     mixed-precision configurations options list.
 
     Args
         default_config: A default OpQuantizationConfig to set as the TP model default configuration.
-        base_config: An OpQuantizationConfig to set as the TargetPlatformCapabilities base configuration for mixed-precision purposes only.
+        base_config: An OpQuantizationConfig to set as the TargetPlatformCapabilities base configuration for
+        mixed-precision purposes only.
         mixed_precision_cfg_list: A list of OpQuantizationConfig to be used as the TP model mixed-precision
             quantization configuration options.
         name: The name of the TargetPlatformCapabilities.
@@ -151,13 +157,12 @@ def generate_tp_model(default_config: OpQuantizationConfig,
     # of possible configurations to consider when quantizing a set of operations (in mixed-precision, for example).
     # If the QuantizationConfigOptions contains only one configuration,
     # this configuration will be used for the operation quantization:
-    default_configuration_options = schema.QuantizationConfigOptions(quantization_configurations=
-                                                                     tuple([default_config]))
+    default_configuration_options = schema.QuantizationConfigOptions(
+        quantization_configurations=tuple([default_config]))
 
     # Create Mixed-Precision quantization configuration options from the given list of OpQuantizationConfig objects
-    mixed_precision_configuration_options = schema.QuantizationConfigOptions(quantization_configurations=
-                                                                             tuple(mixed_precision_cfg_list),
-                                                                             base_config=base_config)
+    mixed_precision_configuration_options = schema.QuantizationConfigOptions(
+        quantization_configurations=tuple(mixed_precision_cfg_list), base_config=base_config)
 
     # Create an OperatorsSet to represent a set of operations.
     # Each OperatorsSet has a unique label.
@@ -272,7 +277,7 @@ def generate_tp_model(default_config: OpQuantizationConfig,
     # unless specified otherwise (see OperatorsSet, for example):
     generated_tpm = schema.TargetPlatformCapabilities(
         default_qco=default_configuration_options,
-        tpc_minor_version=2,
+        tpc_minor_version=1,
         tpc_patch_version=0,
         tpc_platform_type=IMX500_TP_MODEL,
         operator_set=tuple(operator_set),
@@ -280,6 +285,5 @@ def generate_tp_model(default_config: OpQuantizationConfig,
         add_metadata=True,
         name=name,
         is_simd_padding=True)
-
 
     return generated_tpm

@@ -1,6 +1,7 @@
 import numpy as np
 import os
 import subprocess
+import shutil
 import sys
 import unittest
 import pytest
@@ -16,7 +17,6 @@ class BaseModelTest:
     def __init__(self,
                  tpc_version,
                  converter_version,
-                 schema_version,
                  device_type,
                  extended_version=None,
                  save_folder='./',
@@ -25,7 +25,6 @@ class BaseModelTest:
                  num_calibration_iter=1,
                  num_of_inputs=1):
         self.tpc_version = tpc_version
-        self.schema_version = schema_version
         self.device_type = device_type
         self.extended_version = extended_version
         self.converter_version = converter_version
@@ -47,7 +46,6 @@ class BaseModelTest:
     def get_tpc(self):
         return get_target_platform_capabilities(tpc_version=self.tpc_version,
                                                 device_type=self.device_type,
-                                                schema_version=self.schema_version,
                                                 extended_version=self.extended_version)
 
     def run_mct(self, tpc, float_model, onnx_path):
@@ -106,6 +104,14 @@ class BaseModelTest:
 
         subprocess.run(cmd, env=env, check=True)
 
+        # TODO:
+        # Which files to check
+        # Check if file created
+        os.path.exists(self.save_folder + '/qmodel.pbtxt')
+
+        # Remove the folder for the next test
+        shutil.rmtree(self.save_folder)
+
 
 class TPCTest(unittest.TestCase):
     def test_check_tpc_version(self):
@@ -115,27 +121,15 @@ class TPCTest(unittest.TestCase):
         save_folder = './mobilenet_pt'
 
         # TPC v1.0
-        BaseModelTest(tpc_version='1.0', device_type="imx500", schema_version='schema_v1', converter_version='3.14.3',
+        BaseModelTest(tpc_version='1.0', device_type="imx500", converter_version='3.14.3',
                       save_folder=save_folder).run_test(float_model)
-        BaseModelTest(tpc_version='1.0', device_type="imx500", schema_version='schema_v1', extended_version='lut',
+        BaseModelTest(tpc_version='1.0', device_type="imx500", extended_version='lut',
                       converter_version='3.14.3', save_folder=save_folder).run_test(float_model)
-        BaseModelTest(tpc_version='1.0', device_type="imx500", schema_version='schema_v1', extended_version='pot',
-                      converter_version='3.14.3', save_folder=save_folder).run_test(float_model)
-
-        # TPC v2.0
-        BaseModelTest(tpc_version='2.0', device_type="imx500", schema_version='schema_v1', converter_version='3.14.3',
-                      save_folder=save_folder).run_test(float_model)
-        BaseModelTest(tpc_version='2.0', device_type="imx500", schema_version='schema_v1', extended_version='lut',
-                      converter_version='3.14.3', save_folder=save_folder).run_test(float_model)
-
-        # TPC v3.0
-        BaseModelTest(tpc_version='3.0', device_type="imx500", schema_version='schema_v1', converter_version='3.14.3',
-                      save_folder=save_folder).run_test(float_model)
-        BaseModelTest(tpc_version='3.0', device_type="imx500", schema_version='schema_v1', extended_version='lut',
+        BaseModelTest(tpc_version='1.0', device_type="imx500", extended_version='pot',
                       converter_version='3.14.3', save_folder=save_folder).run_test(float_model)
 
         # TPC v4.0
-        BaseModelTest(tpc_version='4.0', device_type="imx500", schema_version='schema_v1', converter_version='3.14.3',
+        BaseModelTest(tpc_version='4.0', device_type="imx500", converter_version='3.14.3',
                       save_folder=save_folder).run_test(float_model)
 
     def test_false_versions(self):
@@ -145,15 +139,22 @@ class TPCTest(unittest.TestCase):
         # TPC v1.8
         with pytest.raises(AssertionError, match="Error: Requested version TPC version '1.8' is not available. The "
                                                  "latest version is 1.0."):
-            BaseModelTest(tpc_version='1.8', device_type="imx500", schema_version='schema_v1',
+            BaseModelTest(tpc_version='1.8', device_type="imx500",
+                          converter_version='3.14.3',
+                          save_folder=save_folder).run_test(float_model)
+
+        # TPC v1.3
+        with pytest.raises(AssertionError, match="Error: Requested version TPC version '1.3' is not available. The "
+                                                 "latest version is 1.0."):
+            BaseModelTest(tpc_version='1.3', device_type="imx500",
                           converter_version='3.14.3',
                           save_folder=save_folder).run_test(float_model)
 
         # TPC v4.0_lut
         with pytest.raises(AssertionError, match="Error: The specified TPC version '4.0_lut' is not valid. Available "
-                                                 "versions are: 1.0, 1.0_lut, 1.0_pot, 2.0, 2.0_lut, 3.0, 3.0_lut, "
-                                                 "4.0. Please ensure you are using a supported version."):
-            BaseModelTest(tpc_version='4.0', device_type="imx500", schema_version='schema_v1', extended_version='lut',
+                                                 "versions are: 1.0, 1.0_lut, 1.0_pot, 4.0. Please ensure you are "
+                                                 "requesting a supported version."):
+            BaseModelTest(tpc_version='4.0', device_type="imx500", extended_version='lut',
                           converter_version='3.14.3',
                           save_folder=save_folder).run_test(float_model)
 
@@ -161,15 +162,7 @@ class TPCTest(unittest.TestCase):
         with pytest.raises(AssertionError, match="Error: The specified device type 'imx400' is not valid. Available "
                                                  "devices are: imx500. Please ensure you are using a supported "
                                                  "device."):
-            BaseModelTest(tpc_version='1.0', device_type="imx400", schema_version='schema_v1',
-                          converter_version='3.14.3',
-                          save_folder=save_folder).run_test(float_model)
-
-        # Schema version schema_v4
-        with pytest.raises(AssertionError, match="Error: The specified Schema version 'schema_v4' is not valid. "
-                                                 "Available versions are: schema_v1. Please ensure you are using a "
-                                                 "supported version."):
-            BaseModelTest(tpc_version='1.0', device_type="imx500", schema_version='schema_v4',
+            BaseModelTest(tpc_version='1.0', device_type="imx400",
                           converter_version='3.14.3',
                           save_folder=save_folder).run_test(float_model)
 

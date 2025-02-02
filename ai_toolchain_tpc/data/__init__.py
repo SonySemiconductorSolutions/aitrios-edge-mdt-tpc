@@ -1,6 +1,6 @@
 from typing import Callable
 
-from ai_toolchain_tpc.data.imx_500 import generate_schema_imx500
+from ai_toolchain_tpc.data.imx_500 import generate_imx500_tpc
 
 
 def generate_device_type(device_type: str) -> Callable:
@@ -17,7 +17,7 @@ def generate_device_type(device_type: str) -> Callable:
 
     # Organize all device types into device_type_dict.
     device_type_dict = {
-        'imx500': generate_schema_imx500
+        'imx500': generate_imx500_tpc
     }
 
     # Check if the device type is supported.
