@@ -40,7 +40,7 @@ import model_compression_toolkit as mct
 # Get a TPC object representing the imx500 hardware and use it for PyTorch model quantization in MCT
 tpc = get_target_platform_capabilities(tpc_version='v4', device_type='imx500')
 
-# Apply MCT on your pre-trained model
+# Apply MCT on your pre-trained model using the TPC
 quantized_model, quantization_info = mct.ptq.pytorch_post_training_quantization(in_module=pretrained_model,
                                                                                 representative_data_gen=dataset,
                                                                                 target_resource_utilization=tpc)
