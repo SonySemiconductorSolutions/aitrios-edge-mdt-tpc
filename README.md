@@ -23,7 +23,7 @@ ________________________________________________________________________________
 ### Quick Installation
 To install the TPC package, ensure you have Python ≥ 3.9 with either PyTorch ≥ 2.1 or TensorFlow ≥ 2.12. Then, run:
 ```
-pip install tpc
+pip install ai_toolchain_tpc 
 ```
 For installing the nightly version or installing from source, refer to the [installation guide](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/blob/main/INSTALLATION.md).
 
