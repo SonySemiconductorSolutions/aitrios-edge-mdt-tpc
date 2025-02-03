@@ -21,22 +21,36 @@ ________________________________________________________________________________
 
 ## <div align="center">Getting Started</div>
 ### Quick Installation
-Pip install the Device Attributes package in a Python>=3.9 environment with PyTorch>=2.1 or Tensorflow>=2.12.
+To install the TPC package, ensure you have Python ≥ 3.9 with either PyTorch ≥ 2.1 or TensorFlow ≥ 2.12. Then, run:
 ```
 pip install tpc
 ```
 For installing the nightly version or installing from source, refer to the [installation guide](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/blob/main/INSTALLATION.md).
 
-**Important note**: In order to use TPC, you’ll need to have MCT installed on your machine. in case it's not installed - the lates MCT version will be automatically installed.
+**Important note**: To use TPC, you’ll need to have Model-Compression-Toolkit (MCT) installed on your machine. If MCT is not already installed, the latest version will be automatically installed
+
+### Using the TPC
+
+To initialize a TPC and integrate it with MCT, use the `get_target_platform_capabilities` function as follows:
+
+```python
+from ai_toolchain_tpc import get_target_platform_capabilities
+import model_compression_toolkit as mct
+
+# Get a TPC object representing the imx500 hardware and use it for PyTorch model quantization in MCT
+tpc = get_target_platform_capabilities(tpc_version='v4', device_type='imx500')
+
+# Apply MCT on your pre-trained model
+quantized_model, quantization_info = mct.ptq.pytorch_post_training_quantization(in_module=pretrained_model,
+                                                                                representative_data_gen=dataset,
+                                                                                target_resource_utilization=tpc)
+```
 
 ### Tutorials and Examples 
 
 Our [tutorials](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/blob/main/tutorials/README.md) section will walk you through the basics of the Device attributes tool and the TPC in particular, covering various use cases. 
 
-### Glossary:
 
-- Schema - Defined by MCT - Defines the TPC modules and holds supported OPset to FW mapping.
-- TPC model - A python file that is defined by TPC - describes edge device capabilities. 
 
 ## <div align="center">Target Platform Capabilities (TPC)</div>
 
@@ -55,35 +69,6 @@ The TPC includes different parameters that are relevant to the hardware during i
 The default target-platform model is [imx500tpc v1]((./tpc_models/imx500_tpc/v1/tpc.py)), quantizes activations using 8 bits with power-of-two thresholds for activations and symmetric threshold for weights.
 For mixed-precision quantization it uses either 2, 4, or 8 bits for quantizing the operators.
 
-### Using the TPC
-
-The simplest way to initiate a TPC and use it in MCT is by using the function `get_tpc` as follows:
-
-```tpc_info = tpc.get_tpc(tpc_version, device_type, schema_version)```
-
->[!NOTE]
-> - schema version is set to default in case you don't provide it <br>
-> - tpc version is set to latest in case you don't provide it
-
-For example:
-
-```python
-from tensorflow.keras.applications.mobilenet import MobileNet
-import model_compression_toolkit as mct
-import target_platform_capabilities as tpc
-import numpy as np
-
-# Get a TPC object that models the hardware for the quantized model inference.
-# The model determines the quantization methods to use during the MCT optimization process.
-# Here, we use the default (imx500) target-platform model attached to a Tensorflow
-# layers representation.
-tpc_info = tpc.get_tpc('imx500', 'default')
-
-quantized_model, quantization_info = mct.ptq.keras_post_training_quantization(MobileNet(),
-                                                                              lambda: [np.random.randn(1, 224, 224, 3)],
-                                                                              # Random representative dataset 
-                                                                              target_platform_capabilities=tpc_info)
-```
 
 ## <div align="center">Contributions</div>
 We'd love your input! Device Attributes would not be possible without help from our community, and welcomes contributions from anyone! 
