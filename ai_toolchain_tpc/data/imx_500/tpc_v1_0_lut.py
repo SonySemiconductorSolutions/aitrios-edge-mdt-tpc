@@ -12,12 +12,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
+from enum import IntEnum
 from typing import List, Tuple
 
 import model_compression_toolkit.target_platform_capabilities.schema.v1 as schema
-from mct_quantizers import QuantizationMethod
 
-# Default bitwidth for disabled quantization candidate.
+
+class QuantizationMethod(IntEnum):
+    """
+    Method for quantization function selection:
+
+    POWER_OF_TWO - Symmetric, uniform, threshold is power of two quantization.
+
+    LUT_POT_QUANTIZER - quantization using a lookup table and power of 2 threshold.
+
+    SYMMETRIC - Symmetric, uniform, quantization.
+
+    UNIFORM - uniform quantization,
+
+    LUT_SYM_QUANTIZER - quantization using a lookup table and symmetric threshold.
+
+    """
+    POWER_OF_TWO = 0
+    LUT_POT_QUANTIZER = 1
+    SYMMETRIC = 2
+    UNIFORM = 3
+    LUT_SYM_QUANTIZER = 4
+
+
+# Default bitwidth for disabled quantization candidate
 FLOAT_BITWIDTH = 32
 
 # TP Attributes.
