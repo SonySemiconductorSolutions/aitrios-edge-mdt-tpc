@@ -1,0 +1,61 @@
+name: Publish Release
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        required: true
+        description: "Release version (e.g. 1.2.3). Corresponding tag (v1.2.3) should already exist."
+      to_testpypi:
+        type: boolean
+        required: true
+        default: true
+        description: "Publish to testpypi."
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref:  v${{ inputs.version }}
+      - name: Install Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Validate version
+        shell: bash
+        run: |
+          pip install --upgrade pip packaging
+          python3 - <<END
+          from packaging.version import parse
+          if not parse("${{ inputs.version }}"):
+              exit(1)
+          END
+
+      - name: update version
+        shell: bash
+        run: |
+          echo "__version__ = '${{ inputs.version }}'" >  ai_toolchain_tpc/version.py
+          echo "ai_toolchain_tpc/version.py content:"
+          cat ai_toolchain_tpc/version.py
+
+      - name: Build wheel
+        shell: bash
+        run: |
+          pip install build twine
+          python -m build --wheel
+
+      - name: Publish package pypi
+        if: inputs.to_testpypi == false
+        shell: bash
+        run: |
+          twine upload --repository pypi dist/* -u __token__ -p ${{ secrets.PYPI_API_KEY }}
+
+      - name: Publish package testpypi
+        if: inputs.to_testpypi == true
+        shell: bash
+        run: |
+          twine upload --repository testpypi dist/* -u __token__ -p ${{ secrets.TEST_PYPI_API_KEY }}
