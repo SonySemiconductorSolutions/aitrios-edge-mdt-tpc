@@ -46,6 +46,14 @@ quantized_model, quantization_info = mct.ptq.pytorch_post_training_quantization(
                                                                                 target_resource_utilization=tpc)
 ```
 
+### Supported Versions
+
+| **IMX500 Converter version** | **TPC version** |
+|------------------------------|-----------------|
+| 3.16                         | v1              |
+| 3.16                         | v1_lut          |
+| 3.16                         | v4              |
+
 ### Tutorials and Examples 
 
 Our [tutorials](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/blob/main/tutorials/README.md) section will walk you through the basics of the Device attributes tool and the TPC in particular, covering various use cases. 
