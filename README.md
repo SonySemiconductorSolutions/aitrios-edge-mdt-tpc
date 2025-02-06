@@ -26,8 +26,6 @@ To install the TPC package, ensure you have Python ≥ 3.9 with either PyTorch �
 pip install ai_toolchain_tpc 
 ```
 
-**Important note**: To use TPC, you’ll need to have Model-Compression-Toolkit (MCT) installed on your machine. If MCT is not already installed, the latest version will be automatically installed
-
 ### Using the TPC
 
 To initialize a TPC and integrate it with MCT, use the `get_target_platform_capabilities` function as follows:
@@ -37,13 +35,14 @@ from ai_toolchain_tpc import get_target_platform_capabilities
 import model_compression_toolkit as mct
 
 # Get a TPC object representing the imx500 hardware and use it for PyTorch model quantization in MCT
-tpc = get_target_platform_capabilities(tpc_version='v4', device_type='imx500')
+tpc = get_target_platform_capabilities(tpc_version='4', device_type='imx500')
 
 # Apply MCT on your pre-trained model using the TPC
 quantized_model, quantization_info = mct.ptq.pytorch_post_training_quantization(in_module=pretrained_model,
                                                                                 representative_data_gen=dataset,
                                                                                 target_resource_utilization=tpc)
 ```
+Note: tpc_version = '4' will install the latest tpc version with minor version 4. for instance, if tpc 4.3 is available, calling tpc_version=4 will utilize 4.3. (If you wish to utilize a specific tpc version, please explicitly mention it, for instance tpc_version = '4.3'
 
 ### Supported Versions
 
