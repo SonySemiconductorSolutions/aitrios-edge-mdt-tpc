@@ -25,7 +25,6 @@ To install the TPC package, ensure you have Python ≥ 3.9 with either PyTorch �
 ```
 pip install ai_toolchain_tpc 
 ```
-For installing the nightly version or installing from source, refer to the [installation guide](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/blob/main/INSTALLATION.md).
 
 **Important note**: To use TPC, you’ll need to have Model-Compression-Toolkit (MCT) installed on your machine. If MCT is not already installed, the latest version will be automatically installed
 
@@ -48,16 +47,13 @@ quantized_model, quantization_info = mct.ptq.pytorch_post_training_quantization(
 
 ### Supported Versions
 
-| **IMX500 Converter version** | **TPC version** |
+| **IMX500 Converter version** | **Supported TPC versions** |
 |------------------------------|-----------------|
-| 3.16                         | v1              |
-| 3.16                         | v1_lut          |
-| 3.16                         | v4              |
+| 3.16                         | v1, v4          |
 
-### Tutorials and Examples 
+### Tutorials
 
-Our [tutorials](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/blob/main/tutorials/README.md) section will walk you through the basics of the Device attributes tool and the TPC in particular, covering various use cases. 
-
+This basic MCT [tutorial](https://github.com/sony/model_optimization/blob/main/tutorials/notebooks/mct_features_notebooks/pytorch/example_pytorch_post_training_quantization.ipynb) section will walk you through the basics of the using the Device attributes tool and the TPC in particular for quantizing your model. 
 
 
 ## <div align="center">Target Platform Capabilities (TPC)</div>
@@ -77,13 +73,6 @@ The TPC includes different parameters that are relevant to the hardware during i
 The default target-platform model is [imx500tpc v1]((./tpc_models/imx500_tpc/v1/tpc.py)), quantizes activations using 8 bits with power-of-two thresholds for activations and symmetric threshold for weights.
 For mixed-precision quantization it uses either 2, 4, or 8 bits for quantizing the operators.
 
-
-## <div align="center">Contributions</div>
-We'd love your input! Device Attributes would not be possible without help from our community, and welcomes contributions from anyone! 
-
-*Checkout our [Contribution guide](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/blob/main/CONTRIBUTING.md) for more details.
-
-Thank you 🙏 to all our contributors!
 
 ## <div align="center">License</div>
 Device Attributes package is licensed under Apache License Version 2.0. By contributing to the project, you agree to the license and copyright terms therein and release your contribution under these terms.
