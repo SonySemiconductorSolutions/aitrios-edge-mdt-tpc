@@ -34,13 +34,14 @@ def get_target_platform_capabilities(tpc_version: str,
     """
     # TODO:
     # validate tpc_version is a number?
+    tpc_version = str(tpc_version)
 
     # Generate a dictionary containing tpcs configurations for the specified device type.
     device_dict = generate_device_type(device_type=device_type)
 
     # Add the extended version tag if existed.
     if extended_version is not None:
-        tpc_version = str(tpc_version) + '_' + extended_version
+        tpc_version = tpc_version + '_' + extended_version
 
     # Get the target platform model for the tpc version.
     tpc = device_dict(tpc_version=tpc_version)

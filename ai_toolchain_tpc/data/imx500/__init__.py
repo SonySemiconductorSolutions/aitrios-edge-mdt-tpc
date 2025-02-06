@@ -1,8 +1,12 @@
 import importlib
 from typing import Tuple, Optional
 
-from ai_toolchain_tpc.data.imx_500.constants import V1, V1_LUT, V4
 from model_compression_toolkit.target_platform_capabilities.schema.mct_current_schema import TargetPlatformCapabilities
+
+# TPC versions.
+V1 = '1.0'
+V1_LUT = '1.0_lut'
+V4 = '4.0'
 
 
 def get_latest_version(version_dict: dict,
@@ -19,20 +23,20 @@ def get_latest_version(version_dict: dict,
         str: The tpc_version to be used for quantized model inference or None if no relevant version was found.
         str: The message explaining the result.
     """
-    # TODO:
-    # act only on ints?
-    # latest of all tpc or only major?
 
     # Check for extended_version.
     parts = tpc_version.split("_")
     numeric_part = parts[0]
     extended_version = parts[1] if len(parts) > 1 else False
 
-    # Extract the major version part (e.g., "1" from "1.7").
-    major_version = str(int(float(numeric_part)))
+    # Check for integer.
+    if not numeric_part.isdigit():
+        return None, (f"Error: The specified TPC version '{tpc_version}' is not valid. "
+                      f"Available versions are: {', '.join(version_dict.keys())}. "
+                      "Please ensure you are requesting a supported version.")
 
     # Get versions that start with the major version.
-    matching_versions = [v for v in version_dict if v.startswith(f"{major_version}.")]
+    matching_versions = [v for v in version_dict if v.startswith(f"{numeric_part}.")]
 
     # Only consider extended_versions if they are explicitly requested.
     if extended_version:
@@ -48,16 +52,11 @@ def get_latest_version(version_dict: dict,
                       f"Available versions are: {', '.join(version_dict.keys())}. "
                       "Please ensure you are requesting a supported version.")
 
-    # Get the latest version using the custom sort key.
     latest_version = max(matching_versions, key=lambda v: float(v.split('_')[0]))  # Sort numerically
 
-    if float(tpc_version.split('_')[0]) > float(latest_version.split('_')[0]):
-        return None, (f"Error: Requested version TPC version '{tpc_version}' is not available. "
-                      f"The latest version is {latest_version}.")
-
     # Return the latest version.
-    return version_dict.get(latest_version), (f"Resolving TPC version '{tpc_version}' to the latest version: "
-                                              f"{latest_version}")
+    return latest_version, (f"Resolving TPC version '{tpc_version}' to the latest version: "
+                            f"{latest_version}")
 
 
 def generate_imx500_tpc(tpc_version: str) -> TargetPlatformCapabilities:
@@ -73,9 +72,9 @@ def generate_imx500_tpc(tpc_version: str) -> TargetPlatformCapabilities:
 
     # Organize all tpc versions into tpcs_dict.
     tpcs_dict = {
-        V1: "ai_toolchain_tpc.data.imx_500.tpc_v1_0",
-        V1_LUT: "ai_toolchain_tpc.data.imx_500.tpc_v1_0_lut",
-        V4: "ai_toolchain_tpc.data.imx_500.tpc_v4_0",
+        V1: "ai_toolchain_tpc.data.imx500.tpc_v1_0",
+        V1_LUT: "ai_toolchain_tpc.data.imx500.tpc_v1_0_lut",
+        V4: "ai_toolchain_tpc.data.imx500.tpc_v4_0",
     }
 
     if tpc_version not in tpcs_dict:

@@ -24,7 +24,7 @@ from torchvision.models import mobilenet_v2
 
 import model_compression_toolkit as mct
 
-from edgemdt_tpc import get_target_platform_capabilities
+from ai_toolchain_tpc import get_target_platform_capabilities
 
 # network_deployment_test
 # api_test

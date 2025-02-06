@@ -24,8 +24,8 @@ from torchvision.models import mobilenet_v2
 
 import model_compression_toolkit as mct
 
-from edgemdt_tpc import get_target_platform_capabilities
-from edgemdt_tpc.data import IMX500
+from ai_toolchain_tpc import get_target_platform_capabilities
+from ai_toolchain_tpc.data import IMX500
 
 
 # network_deployment_test
