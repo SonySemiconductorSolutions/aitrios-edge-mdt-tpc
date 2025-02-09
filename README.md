@@ -46,13 +46,18 @@ quantized_model, quantization_info = mct.ptq.pytorch_post_training_quantization(
                                                                                 target_resource_utilization=tpc)
 ```
 
-### Supported Versions
 
-| **IMX500 Converter version** | **TPC version** |
-|------------------------------|-----------------|
-| 3.16                         | v1              |
-| 3.16                         | v1_lut          |
-| 3.16                         | v4              |
+## <div align="center">Supported Versions</div>
+
+<details id="supported-versions">
+  <summary>Supported Versions Table</summary>
+
+|                       | TPC 1.0                                                                                                                                                                                                                                                            | TPC 4.0                                                                                                                                                                                                                                                            |
+|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| IMX500 Converter 3.14 | [![Run Tests](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/actions/workflows/run_tests_conv314_tpc10.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/actions/workflows/run_tests_conv314_tpc10.yml) | [![Run Tests](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/actions/workflows/run_tests_conv314_tpc40.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/actions/workflows/run_tests_conv314_tpc40.yml) |
+| IMX500 Converter 3.16 | [![Run Tests](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/actions/workflows/run_tests_conv316_tpc10.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/actions/workflows/run_tests_conv316_tpc10.yml) | [![Run Tests](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/actions/workflows/run_tests_conv316_tpc40.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/actions/workflows/run_tests_conv316_tpc40.yml) |
+
+</details>
 
 ### Tutorials and Examples 
 
