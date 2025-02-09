@@ -1,0 +1,19 @@
+name: Converter Version 3.16, TPC version 1.0
+on:
+  workflow_dispatch: # Allow manual triggers
+  schedule:
+    - cron: 0 0 * * *
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  run-tests:
+    uses: ./.github/workflows/run_tests.yml
+    with:
+      converter-version: "3.16"
+      tpc-version: "1.0"

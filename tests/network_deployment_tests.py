@@ -25,14 +25,15 @@ from torchvision.models import mobilenet_v2
 import model_compression_toolkit as mct
 
 from ai_toolchain_tpc import get_target_platform_capabilities
+from ai_toolchain_tpc.data import IMX500
+
 
 # network_deployment_test
 # api_test
-class BaseModelTest:
+class NetworkDeploymentBaseTest:
     def __init__(self,
                  tpc_version,
-                 converter_version,
-                 device_type,
+                 device_type=IMX500,
                  extended_version=None,
                  save_folder='./',
                  input_shape=(3, 224, 224),
@@ -42,7 +43,6 @@ class BaseModelTest:
         self.tpc_version = tpc_version
         self.device_type = device_type
         self.extended_version = extended_version
-        self.converter_version = converter_version
         self.save_folder = save_folder
         self.input_shape = (batch_size,) + input_shape
         self.num_calibration_iter = num_calibration_iter
@@ -95,10 +95,6 @@ class BaseModelTest:
 
         # Check which version of IMX500 Converter is installed
         installed_conv = result.stdout.split(' ')[-1].split('\n')[0]
-        if installed_conv != self.converter_version:
-            # TODO: install converter version
-            print(f"The installed IMX500 converter version is {installed_conv}, which differs from the requested "
-                  f"version {self.converter_version}.")
 
     def run_test(self, float_model):
         os.makedirs(self.save_folder, exist_ok=True)
@@ -128,54 +124,11 @@ class BaseModelTest:
         shutil.rmtree(self.save_folder)
 
 
-class TPCTest(unittest.TestCase):
-    def test_check_tpc_version(self):
-        # TODO:
-        # Get versions from main matrix.
+class NetworkDeploymentTest(unittest.TestCase):
+    def test_network_deployment_tpc_version(self):
+        tpc_version = os.getenv("TPC_VERSION")  # Get version from GitHub CI
         float_model = mobilenet_v2()
         save_folder = './mobilenet_pt'
 
-        # TPC v1.0
-        BaseModelTest(tpc_version='1.0', device_type="imx500", converter_version='3.14.3',
-                      save_folder=save_folder).run_test(float_model)
-        BaseModelTest(tpc_version='1.0', device_type="imx500", extended_version='lut',
-                      converter_version='3.14.3', save_folder=save_folder).run_test(float_model)
-
-        # TPC v4.0
-        BaseModelTest(tpc_version='4.0', device_type="imx500", converter_version='3.14.3',
-                      save_folder=save_folder).run_test(float_model)
-
-    def test_false_versions(self):
-        float_model = mobilenet_v2()
-        save_folder = './mobilenet_pt'
-
-        # TPC v1.8
-        with pytest.raises(AssertionError, match="Error: Requested version TPC version '1.8' is not available. The "
-                                                 "latest version is 1.0."):
-            BaseModelTest(tpc_version='1.8', device_type="imx500",
-                          converter_version='3.14.3',
-                          save_folder=save_folder).run_test(float_model)
-
-        # TPC v1.3
-        with pytest.raises(AssertionError, match="Error: Requested version TPC version '1.3' is not available. The "
-                                                 "latest version is 1.0."):
-            BaseModelTest(tpc_version='1.3', device_type="imx500",
-                          converter_version='3.14.3',
-                          save_folder=save_folder).run_test(float_model)
-
-        # TPC v4.0_lut
-        with pytest.raises(AssertionError, match="Error: The specified TPC version '4.0_lut' is not valid. Available "
-                                                 "versions are: 1.0, 1.0_lut, 4.0. Please ensure you are "
-                                                 "requesting a supported version."):
-            BaseModelTest(tpc_version='4.0', device_type="imx500", extended_version='lut',
-                          converter_version='3.14.3',
-                          save_folder=save_folder).run_test(float_model)
-
-        # Device type IMX400
-        with pytest.raises(AssertionError, match="Error: The specified device type 'imx400' is not valid. Available "
-                                                 "devices are: imx500. Please ensure you are using a supported "
-                                                 "device."):
-            BaseModelTest(tpc_version='1.0', device_type="imx400",
-                          converter_version='3.14.3',
-                          save_folder=save_folder).run_test(float_model)
-
+        NetworkDeploymentBaseTest(tpc_version=tpc_version, device_type="imx500",
+                                  save_folder=save_folder).run_test(float_model)
