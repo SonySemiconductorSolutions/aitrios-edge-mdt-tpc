@@ -1,1 +1,1 @@
-model-compression-toolkit >= 2.3
+mct-nightly
