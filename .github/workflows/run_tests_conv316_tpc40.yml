@@ -1,4 +1,4 @@
-name: Converter Version 3.16, TPC version 4.0
+name: Converter 3.16, TPC 4.0
 on:
   workflow_dispatch: # Allow manual triggers
   schedule:
