@@ -77,20 +77,20 @@ class NetworkDeploymentBaseTest:
         # Check if Java is installed
         result = subprocess.run(["java", "-version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         if result.returncode != 0:
-            from IPython.display import display, HTML
-            display(
-                HTML(
-                    "<p style='color: red; font-weight: bold;'>Java is not installed. Please install Java 17 to proceed.</p>"))
+            # from IPython.display import display, HTML
+            # display(
+            #     HTML(
+            #         "<p style='color: red; font-weight: bold;'>Java is not installed. Please install Java 17 to proceed.</p>"))
             raise SystemExit("Stopping execution: Java is not installed.")
 
         # Check if IMX500 Converter is installed
         result = subprocess.run(["imxconv-pt", "--version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         if result.returncode != 0:
-            from IPython.display import display, HTML
-            display(
-                HTML(
-                    "<p style='color: red; font-weight: bold;'>IMX500 Converter is not installed. Please install "
-                    "imx500-converter[pt] to proceed.</p>"))
+            # from IPython.display import display, HTML
+            # display(
+            #     HTML(
+            #         "<p style='color: red; font-weight: bold;'>IMX500 Converter is not installed. Please install "
+            #         "imx500-converter[pt] to proceed.</p>"))
             raise SystemExit("Stopping execution: IMX500 Converter is not installed.")
 
         # Check which version of IMX500 Converter is installed
