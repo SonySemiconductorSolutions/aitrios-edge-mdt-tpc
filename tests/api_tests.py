@@ -18,7 +18,7 @@ import importlib
 
 import pytest
 
-from ai_toolchain_tpc import get_target_platform_capabilities
+from edgemdt_tpc import get_target_platform_capabilities
 
 
 class APIBaseTest:
@@ -51,19 +51,19 @@ class APITest(unittest.TestCase):
 
         # TPC v1.0
         APIBaseTest(tpc_version='1.0', device_type="imx500").run_test(
-            expected_tpc_path="ai_toolchain_tpc.data.imx500.tpc_v1_0", expected_tpc_version='1.0')
+            expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v1_0", expected_tpc_version='1.0')
         APIBaseTest(tpc_version='1', device_type="imx500").run_test(
-            expected_tpc_path="ai_toolchain_tpc.data.imx500.tpc_v1_0", expected_tpc_version='1.0')
+            expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v1_0", expected_tpc_version='1.0')
         APIBaseTest(tpc_version='1.0', device_type="imx500", extended_version='lut').run_test(
-            expected_tpc_path="ai_toolchain_tpc.data.imx500.tpc_v1_0_lut", expected_tpc_version='1.0_lut')
+            expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v1_0_lut", expected_tpc_version='1.0_lut')
         APIBaseTest(tpc_version='1', device_type="imx500", extended_version='lut').run_test(
-            expected_tpc_path="ai_toolchain_tpc.data.imx500.tpc_v1_0_lut", expected_tpc_version='1.0_lut')
+            expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v1_0_lut", expected_tpc_version='1.0_lut')
 
         # TPC v4.0
         APIBaseTest(tpc_version='4.0', device_type="imx500").run_test(
-            expected_tpc_path="ai_toolchain_tpc.data.imx500.tpc_v4_0", expected_tpc_version='4.0')
+            expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v4_0", expected_tpc_version='4.0')
         APIBaseTest(tpc_version='4', device_type="imx500").run_test(
-            expected_tpc_path="ai_toolchain_tpc.data.imx500.tpc_v4_0", expected_tpc_version='4.0')
+            expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v4_0", expected_tpc_version='4.0')
 
     def test_api_false_tpc_version(self):
 
@@ -72,25 +72,25 @@ class APITest(unittest.TestCase):
                                                  "versions are: 1.0, 1.0_lut, 4.0. Please ensure you are requesting a"
                                                  " supported version."):
             APIBaseTest(tpc_version='1.8', device_type="imx500").run_test(
-                expected_tpc_path="ai_toolchain_tpc.data.imx500.tpc_v1_0", expected_tpc_version='1.8')
+                expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v1_0", expected_tpc_version='1.8')
 
         # TPC v1.3
         with pytest.raises(AssertionError, match="Error: The specified TPC version '1.3' is not valid. Available "
                                                  "versions are: 1.0, 1.0_lut, 4.0. Please ensure you are requesting a"
                                                  " supported version."):
             APIBaseTest(tpc_version='1.3', device_type="imx500").run_test(
-                expected_tpc_path="ai_toolchain_tpc.data.imx500.tpc_v1_0", expected_tpc_version='1.3')
+                expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v1_0", expected_tpc_version='1.3')
 
         # TPC v4.0_lut
         with pytest.raises(AssertionError, match="Error: The specified TPC version '4.0_lut' is not valid. Available "
                                                  "versions are: 1.0, 1.0_lut, 4.0. Please ensure you are "
                                                  "requesting a supported version."):
             APIBaseTest(tpc_version='4.0', device_type="imx500", extended_version='lut').run_test(
-                expected_tpc_path="ai_toolchain_tpc.data.imx500.tpc_v4_0", expected_tpc_version='4.0_lut')
+                expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v4_0", expected_tpc_version='4.0_lut')
 
         # Device type IMX400
         with pytest.raises(AssertionError, match="Error: The specified device type 'imx400' is not valid. Available "
                                                  "devices are: imx500. Please ensure you are using a supported "
                                                  "device."):
             APIBaseTest(tpc_version='1.0', device_type="imx400").run_test(
-                expected_tpc_path="ai_toolchain_tpc.data.imx500.tpc_v4_0", expected_tpc_version='1.0')
+                expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v4_0", expected_tpc_version='1.0')

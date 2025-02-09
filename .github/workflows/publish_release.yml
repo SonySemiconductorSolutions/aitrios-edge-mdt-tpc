@@ -38,9 +38,9 @@ jobs:
       - name: update version
         shell: bash
         run: |
-          echo "__version__ = '${{ inputs.version }}'" >  ai_toolchain_tpc/version.py
-          echo "ai_toolchain_tpc/version.py content:"
-          cat ai_toolchain_tpc/version.py
+          echo "__version__ = '${{ inputs.version }}'" >  edgemdt_tpc/version.py
+          echo "edgemdt_tpc/version.py content:"
+          cat edgemdt_tpc/version.py
 
       - name: Build wheel
         shell: bash
