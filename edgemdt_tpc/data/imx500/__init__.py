@@ -72,9 +72,9 @@ def generate_imx500_tpc(tpc_version: str) -> TargetPlatformCapabilities:
 
     # Organize all tpc versions into tpcs_dict.
     tpcs_dict = {
-        V1: "ai_toolchain_tpc.data.imx500.tpc_v1_0",
-        V1_LUT: "ai_toolchain_tpc.data.imx500.tpc_v1_0_lut",
-        V4: "ai_toolchain_tpc.data.imx500.tpc_v4_0",
+        V1: "edgemdt_tpc.data.imx500.tpc_v1_0",
+        V1_LUT: "edgemdt_tpc.data.imx500.tpc_v1_0_lut",
+        V4: "edgemdt_tpc.data.imx500.tpc_v4_0",
     }
 
     if tpc_version not in tpcs_dict:

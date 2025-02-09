@@ -14,7 +14,7 @@
 # ==============================================================================
 from typing import Optional
 
-from ai_toolchain_tpc.data import generate_device_type, IMX500
+from edgemdt_tpc.data import generate_device_type, IMX500
 from model_compression_toolkit.target_platform_capabilities.schema.mct_current_schema import TargetPlatformCapabilities
 
 

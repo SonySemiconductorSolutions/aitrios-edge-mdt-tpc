@@ -1,6 +1,6 @@
 from typing import Callable
 
-from ai_toolchain_tpc.data.imx500 import generate_imx500_tpc
+from edgemdt_tpc.data.imx500 import generate_imx500_tpc
 
 # Device types.
 IMX500 = 'imx500'

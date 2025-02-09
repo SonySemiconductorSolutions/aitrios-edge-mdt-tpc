@@ -11,7 +11,7 @@ ______________________________________________________________________
   <a href="https://sony.github.io/model_optimization#prerequisites"><img src="https://img.shields.io/badge/pytorch-2.1%20%7C%202.2%20%7C%202.3%20%7C%202.4%20%7C%202.5-blue" /></a>
   <a href="https://sony.github.io/model_optimization#prerequisites"><img src="https://img.shields.io/badge/TensorFlow-2.12%20%7C%202.13%20%7C%202.14%20%7C%202.15-blue" /></a>
   <a href="https://sony.github.io/model_optimization#prerequisites"><img src="https://img.shields.io/badge/python-3.9%20%7C3.10%20%7C3.11-blue" /></a>
-  <a href="https://github.com/sony/model_optimization/releases"><img src="https://img.shields.io/github/v/release/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC" /></a>
+  <a href="https://github.com/sony/model_optimization/releases"><img src="https://img.shields.io/github/v/release/SonySemiconductorSolutions/EdgeMDT-TPC" /></a>
   <a href="https://github.com/sony/model_optimization/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/license-Apache%202.0-blue" /></a>
   
  </p>    
@@ -23,9 +23,9 @@ ________________________________________________________________________________
 ### Quick Installation
 To install the TPC package, ensure you have Python ≥ 3.9 with either PyTorch ≥ 2.1 or TensorFlow ≥ 2.12. Then, run:
 ```
-pip install ai_toolchain_tpc 
+pip install edgemdt_tpc 
 ```
-For installing the nightly version or installing from source, refer to the [installation guide](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/blob/main/INSTALLATION.md).
+For installing the nightly version or installing from source, refer to the [installation guide](https://github.com/SonySemiconductorSolutions/EdgeMDT-TPC/blob/main/INSTALLATION.md).
 
 **Important note**: To use TPC, you’ll need to have Model-Compression-Toolkit (MCT) installed on your machine. If MCT is not already installed, the latest version will be automatically installed
 
@@ -34,11 +34,11 @@ For installing the nightly version or installing from source, refer to the [inst
 To initialize a TPC and integrate it with MCT, use the `get_target_platform_capabilities` function as follows:
 
 ```python
-from ai_toolchain_tpc import get_target_platform_capabilities
+from edgemdt_tpc import get_target_platform_capabilities
 import model_compression_toolkit as mct
 
 # Get a TPC object representing the imx500 hardware and use it for PyTorch model quantization in MCT
-tpc = get_target_platform_capabilities(tpc_version='v4', device_type='imx500')
+tpc = get_target_platform_capabilities(tpc_version='4.0', device_type='imx500')
 
 # Apply MCT on your pre-trained model using the TPC
 quantized_model, quantization_info = mct.ptq.pytorch_post_training_quantization(in_module=pretrained_model,
@@ -52,16 +52,16 @@ quantized_model, quantization_info = mct.ptq.pytorch_post_training_quantization(
 <details id="supported-versions">
   <summary>Supported Versions Table</summary>
 
-|                       | TPC 1.0                                                                                                                                                                                                                                                            | TPC 4.0                                                                                                                                                                                                                                                            |
-|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| IMX500 Converter 3.14 | [![Run Tests](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/actions/workflows/run_tests_conv314_tpc10.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/actions/workflows/run_tests_conv314_tpc10.yml) | <p align="center"> Not supported </p>                                                                                                                                                                                                                              |
-| IMX500 Converter 3.16 | [![Run Tests](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/actions/workflows/run_tests_conv316_tpc10.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/actions/workflows/run_tests_conv316_tpc10.yml) | [![Run Tests](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/actions/workflows/run_tests_conv316_tpc40.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/actions/workflows/run_tests_conv316_tpc40.yml) |
+|                       | TPC 1.0                                                                                                                                                                                                                                                          | TPC 4.0                                                                                                                                                                                                                                                            |
+|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| IMX500 Converter 3.14 | [![Run Tests](https://github.com/SonySemiconductorSolutions/EdgeMDT-TPC/actions/workflows/run_tests_conv314_tpc10.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/EdgeMDT-TPC/actions/workflows/run_tests_conv314_tpc10.yml) | <p align="center"> Not supported </p>                                                                                                                                                                                                                              |
+| IMX500 Converter 3.16 | [![Run Tests](https://github.com/SonySemiconductorSolutions/EdgeMDT-TPC/actions/workflows/run_tests_conv316_tpc10.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/EdgeMDT-TPC/actions/workflows/run_tests_conv316_tpc10.yml) | [![Run Tests](https://github.com/SonySemiconductorSolutions/EdgeMDT-TPC/actions/workflows/run_tests_conv316_tpc40.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/EdgeMDT-TPC/actions/workflows/run_tests_conv316_tpc40.yml) |
 
 </details>
 
 ### Tutorials and Examples 
 
-Our [tutorials](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/blob/main/tutorials/README.md) section will walk you through the basics of the Device attributes tool and the TPC in particular, covering various use cases. 
+Our [tutorials](https://github.com/SonySemiconductorSolutions/EdgeMDT-TPC/blob/main/tutorials/README.md) section will walk you through the basics of the Device attributes tool and the TPC in particular, covering various use cases. 
 
 
 
@@ -86,11 +86,11 @@ For mixed-precision quantization it uses either 2, 4, or 8 bits for quantizing t
 ## <div align="center">Contributions</div>
 We'd love your input! Device Attributes would not be possible without help from our community, and welcomes contributions from anyone! 
 
-*Checkout our [Contribution guide](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/blob/main/CONTRIBUTING.md) for more details.
+*Checkout our [Contribution guide](https://github.com/SonySemiconductorSolutions/EdgeMDT-TPC/blob/main/CONTRIBUTING.md) for more details.
 
 Thank you 🙏 to all our contributors!
 
 ## <div align="center">License</div>
 Device Attributes package is licensed under Apache License Version 2.0. By contributing to the project, you agree to the license and copyright terms therein and release your contribution under these terms.
 
-<a href="https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/license-Apache%202.0-blue" /></a>
+<a href="https://github.com/SonySemiconductorSolutions/EdgeMDT-TPC/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/license-Apache%202.0-blue" /></a>

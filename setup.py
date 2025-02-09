@@ -21,5 +21,5 @@ def read_install_requires():
     return [r.split('\n')[0] for r in open('requirements.txt', 'r').readlines()]
 
 
-setup(packages=find_packages(include=["ai_toolchain_tpc", "ai_toolchain_tpc.*"], exclude=["*tests*"]),
+setup(packages=find_packages(include=["edgemdt_tpc", "edgemdt_tpc.*"], exclude=["*tests*"]),
       install_requires=read_install_requires())
