@@ -22,8 +22,6 @@ To install the TPC package, run:
 pip install edgemdt_tpc 
 ```
 
-**Important note**: To use TPC, you’ll need to have Model-Compression-Toolkit (MCT) installed on your machine. If MCT is not already installed, the latest version will be automatically installed.
-
 ### Using the TPC
 
 To initialize a TPC and integrate it with MCT, use the `get_target_platform_capabilities` function as follows:
@@ -47,7 +45,7 @@ quantized_model, quantization_info = mct.ptq.pytorch_post_training_quantization(
 <details id="supported-versions">
   <summary>Supported Versions Table</summary>
 
-|                       | TPC 1.0                                                                                                                                                                                                                                                          | TPC 4.0                                                                                                                                                                                                                                                            |
+|                       |                    TPC 1.0                                                                                                                                                                                                                                                                    |                    TPC 4.0                                                                                                                                                                                                                                                                      |
 |-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | IMX500 Converter 3.14 | [![Run Tests](https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/actions/workflows/run_tests_conv314_tpc10.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/actions/workflows/run_tests_conv314_tpc10.yml) | <p align="center"> Not supported </p>                                                                                                                                                                                                                              |
 | IMX500 Converter 3.16 | [![Run Tests](https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/actions/workflows/run_tests_conv316_tpc10.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/actions/workflows/run_tests_conv316_tpc10.yml) | [![Run Tests](https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/actions/workflows/run_tests_conv316_tpc40.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/actions/workflows/run_tests_conv316_tpc40.yml) |
@@ -69,6 +67,6 @@ The TPC includes different parameters that are relevant to the hardware during i
 </div>
 
 ## <div align="center">License</div>
-Device Attributes package is licensed under Apache License Version 2.0. By contributing to the project, you agree to the license and copyright terms therein and release your contribution under these terms.
+The EdgeMDT-TPC package is licensed under Apache License Version 2.0. By contributing to the project, you agree to the license and copyright terms therein and release your contribution under these terms.
 
 <a href="https://github.com/SonySemiconductorSolutions/EdgeMDT-TPC/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/license-Apache%202.0-blue" /></a>
