@@ -1,6 +1,6 @@
 <div align="center" markdown="1">
 <p>
-      <a href="https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/" target="_blank">
+      <a href="https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/" target="_blank">
         <img src="/docsrc/images/tpc_header.png" width="1000"></a>
 </p>
   
@@ -8,8 +8,8 @@ ______________________________________________________________________
 
 
 <p align="center">
-  <a href="https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/releases"><img src="https://img.shields.io/github/v/release/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC" /></a>
-  <a href="https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/license-Apache%202.0-blue" /></a>
+  <a href="https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/releases"><img src="https://img.shields.io/github/v/release/SonySemiconductorSolutions/aitrios-edge-mdt-tpc" /></a>
+  <a href="https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/blob/main/LICENSE.md"><img src="https://img.shields.io/badge/license-Apache%202.0-blue" /></a>
  </p>    
 </div>
 
@@ -49,8 +49,8 @@ quantized_model, quantization_info = mct.ptq.pytorch_post_training_quantization(
 
 |                       | TPC 1.0                                                                                                                                                                                                                                                          | TPC 4.0                                                                                                                                                                                                                                                            |
 |-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| IMX500 Converter 3.14 | [![Run Tests](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/actions/workflows/run_tests_conv314_tpc10.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/actions/workflows/run_tests_conv314_tpc10.yml) | <p align="center"> Not supported </p>                                                                                                                                                                                                                              |
-| IMX500 Converter 3.16 | [![Run Tests](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/actions/workflows/run_tests_conv316_tpc10.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/actions/workflows/run_tests_conv316_tpc10.yml) | [![Run Tests](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/actions/workflows/run_tests_conv316_tpc40.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/actions/workflows/run_tests_conv316_tpc40.yml) |
+| IMX500 Converter 3.14 | [![Run Tests](https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/actions/workflows/run_tests_conv314_tpc10.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/actions/workflows/run_tests_conv314_tpc10.yml) | <p align="center"> Not supported </p>                                                                                                                                                                                                                              |
+| IMX500 Converter 3.16 | [![Run Tests](https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/actions/workflows/run_tests_conv316_tpc10.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/actions/workflows/run_tests_conv316_tpc10.yml) | [![Run Tests](https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/actions/workflows/run_tests_conv316_tpc40.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/actions/workflows/run_tests_conv316_tpc40.yml) |
 
 </details>
 
@@ -63,7 +63,7 @@ The TPC includes different parameters that are relevant to the hardware during i
 
 <div align="center" markdown="1">
 <p>
-      <a href="https://github.com/SonySemiconductorSolutions/IMX500-AI-Toolchain-TPC/" target="_blank">
+      <a href="https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/" target="_blank">
         <img src="/docsrc/images/tpc_arch.png" width="400"></a>
 </p>
 </div>
