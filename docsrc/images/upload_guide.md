@@ -1,2 +1,0 @@
-- Please make sure to upload assets with meaningful names
-- Please make sure to delete unnecesery files

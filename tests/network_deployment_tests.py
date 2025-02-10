@@ -12,24 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-import numpy as np
 import os
-import subprocess
 import shutil
+import subprocess
 import sys
 import unittest
-import pytest
 
+import numpy as np
 from torchvision.models import mobilenet_v2
 
 import model_compression_toolkit as mct
-
 from edgemdt_tpc import get_target_platform_capabilities
 from edgemdt_tpc.data import IMX500
 
-
-# network_deployment_test
-# api_test
 class NetworkDeploymentBaseTest:
     def __init__(self,
                  tpc_version,
@@ -84,9 +79,6 @@ class NetworkDeploymentBaseTest:
         if result.returncode != 0:
             raise SystemExit("Stopping execution: IMX500 Converter is not installed.")
 
-        # Check which version of IMX500 Converter is installed
-        installed_conv = result.stdout.split(' ')[-1].split('\n')[0]
-
     def run_test(self, float_model):
         os.makedirs(self.save_folder, exist_ok=True)
         onnx_path = os.path.join(self.save_folder, 'qmodel.onnx')
@@ -106,9 +98,6 @@ class NetworkDeploymentBaseTest:
 
         subprocess.run(cmd, env=env, check=True)
 
-        # TODO:
-        # Which files to check
-        # Check if file created
         os.path.exists(self.save_folder + '/qmodel.pbtxt')
 
         # Remove the folder for the next test
