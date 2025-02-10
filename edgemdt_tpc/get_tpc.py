@@ -32,8 +32,6 @@ def get_target_platform_capabilities(tpc_version: str,
     Returns:
         TargetPlatformCapabilities: The hardware configuration used for quantized model inference.
     """
-    # TODO:
-    # validate tpc_version is a number?
     tpc_version = str(tpc_version)
 
     # Generate a dictionary containing tpcs configurations for the specified device type.
