@@ -34,9 +34,10 @@ import model_compression_toolkit as mct
 tpc = get_target_platform_capabilities(tpc_version='4.0', device_type='imx500')
 
 # Apply MCT on your pre-trained model using the TPC
-quantized_model, quantization_info = mct.ptq.pytorch_post_training_quantization(in_module=pretrained_model,
-                                                                                representative_data_gen=dataset,
-                                                                                target_resource_utilization=tpc)
+quantized_model, quantization_info = mct.ptq.pytorch_post_training_quantization(
+    in_module=pretrained_model, # Replace with your pretrained model.
+    representative_data_gen=dataset, # Replace with your representative dataset.
+    target_resource_utilization=tpc)
 ```
 
 
