@@ -1,7 +1,7 @@
 <div align="center" markdown="1">
 <p>
       <a href="https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/" target="_blank">
-        <img src="/docsrc/images/tpc_header.png" width="1000"></a>
+        <img src="/docsrc/images/edgeMdtTpcHeader.png" width="1000"></a>
 </p>
   
 ______________________________________________________________________
@@ -64,7 +64,7 @@ The TPC includes different parameters that are relevant to the hardware during i
 <div align="center" markdown="1">
 <p>
       <a href="https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/" target="_blank">
-        <img src="/docsrc/images/tpc_arch.png" width="400"></a>
+        <img src="/docsrc/images/tpcArch.png" width="400"></a>
 </p>
 </div>
 
