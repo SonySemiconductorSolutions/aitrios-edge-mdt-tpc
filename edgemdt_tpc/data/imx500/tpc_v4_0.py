@@ -222,11 +222,10 @@ def generate_tp_model(default_config: schema.OpQuantizationConfig,
          const_config_input16_per_tensor]),
         base_config=const_config_input16_per_tensor)
 
-    qpreserving_const_config = (
-        const_config.clone_and_edit(enable_activation_quantization=False,
-                                    quantization_preserving=True,
-                                    default_weight_attr_config=const_config.default_weight_attr_config.clone_and_edit(
-                                        weights_per_channel_threshold=False)))
+    qpreserving_const_config = const_config.clone_and_edit(enable_activation_quantization=False,
+                                                           quantization_preserving=True,
+                                                           default_weight_attr_config=const_config.default_weight_attr_config.clone_and_edit(
+                                                               weights_per_channel_threshold=False, weights_n_bits=16))
     qpreserving_const_config_options = schema.QuantizationConfigOptions(
         quantization_configurations=tuple([qpreserving_const_config]))
 
