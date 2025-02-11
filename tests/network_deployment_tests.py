@@ -84,6 +84,7 @@ class NetworkDeploymentBaseTest:
         onnx_path = os.path.join(self.save_folder, 'qmodel.onnx')
 
         tpc = self.get_tpc()
+        print("Debug workflow! :)")
         self.run_mct(tpc=tpc, float_model=float_model, onnx_path=onnx_path)
 
         # Check if Java and IMX500 Converter is installed
