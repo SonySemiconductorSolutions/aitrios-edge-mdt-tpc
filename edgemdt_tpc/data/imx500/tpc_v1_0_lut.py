@@ -12,33 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-from enum import IntEnum
 from typing import List, Tuple
 
 import model_compression_toolkit.target_platform_capabilities.schema.v1 as schema
-
-
-class QuantizationMethod(IntEnum):
-    """
-    Method for quantization function selection:
-
-    POWER_OF_TWO - Symmetric, uniform, threshold is power of two quantization.
-
-    LUT_POT_QUANTIZER - quantization using a lookup table and power of 2 threshold.
-
-    SYMMETRIC - Symmetric, uniform, quantization.
-
-    UNIFORM - uniform quantization,
-
-    LUT_SYM_QUANTIZER - quantization using a lookup table and symmetric threshold.
-
-    """
-    POWER_OF_TWO = 0
-    LUT_POT_QUANTIZER = 1
-    SYMMETRIC = 2
-    UNIFORM = 3
-    LUT_SYM_QUANTIZER = 4
-
 
 # Default bitwidth for disabled quantization candidate
 FLOAT_BITWIDTH = 32
@@ -84,7 +60,7 @@ def get_op_quantization_configs() -> (
 
     # We define a default quantization config for all non-specified weights attributes.
     default_weight_attr_config = schema.AttributeQuantizationConfig(
-        weights_quantization_method=QuantizationMethod.POWER_OF_TWO,
+        weights_quantization_method=schema.QuantizationMethod.POWER_OF_TWO,
         weights_n_bits=8,
         weights_per_channel_threshold=False,
         enable_weights_quantization=False,
@@ -92,7 +68,7 @@ def get_op_quantization_configs() -> (
 
     # We define a quantization config to quantize the kernel (for layers where there is a kernel attribute).
     kernel_base_config = schema.AttributeQuantizationConfig(
-        weights_quantization_method=QuantizationMethod.SYMMETRIC,
+        weights_quantization_method=schema.QuantizationMethod.SYMMETRIC,
         weights_n_bits=8,
         weights_per_channel_threshold=True,
         enable_weights_quantization=True,
@@ -100,7 +76,7 @@ def get_op_quantization_configs() -> (
 
     # We define a quantization config to quantize the bias (for layers where there is a bias attribute).
     bias_config = schema.AttributeQuantizationConfig(
-        weights_quantization_method=QuantizationMethod.POWER_OF_TWO,
+        weights_quantization_method=schema.QuantizationMethod.POWER_OF_TWO,
         weights_n_bits=FLOAT_BITWIDTH,
         weights_per_channel_threshold=False,
         enable_weights_quantization=False,
@@ -115,7 +91,7 @@ def get_op_quantization_configs() -> (
     eight_bits_default = schema.OpQuantizationConfig(
         default_weight_attr_config=default_weight_attr_config,
         attr_weights_configs_mapping={},
-        activation_quantization_method=QuantizationMethod.POWER_OF_TWO,
+        activation_quantization_method=schema.QuantizationMethod.POWER_OF_TWO,
         activation_n_bits=8,
         supported_input_activation_n_bits=8,
         enable_activation_quantization=True,
@@ -129,7 +105,7 @@ def get_op_quantization_configs() -> (
     linear_eight_bits = schema.OpQuantizationConfig(
         default_weight_attr_config=default_weight_attr_config,
         attr_weights_configs_mapping={KERNEL_ATTR: kernel_base_config, BIAS_ATTR: bias_config},
-        activation_quantization_method=QuantizationMethod.POWER_OF_TWO,
+        activation_quantization_method=schema.QuantizationMethod.POWER_OF_TWO,
         activation_n_bits=8,
         supported_input_activation_n_bits=8,
         enable_activation_quantization=True,
@@ -146,11 +122,11 @@ def get_op_quantization_configs() -> (
     # to quantize the operations' activations using LUT.
     four_bits_lut = linear_eight_bits.clone_and_edit(
         attr_to_edit={KERNEL_ATTR: {WEIGHTS_N_BITS: 4,
-                                    WEIGHTS_QUANTIZATION_METHOD: QuantizationMethod.LUT_SYM_QUANTIZER}},
+                                    WEIGHTS_QUANTIZATION_METHOD: schema.QuantizationMethod.LUT_SYM_QUANTIZER}},
         simd_size=linear_eight_bits.simd_size * 2)
     two_bits_lut = linear_eight_bits.clone_and_edit(
         attr_to_edit={KERNEL_ATTR: {WEIGHTS_N_BITS: 2,
-                                    WEIGHTS_QUANTIZATION_METHOD: QuantizationMethod.LUT_SYM_QUANTIZER}},
+                                    WEIGHTS_QUANTIZATION_METHOD: schema.QuantizationMethod.LUT_SYM_QUANTIZER}},
         simd_size=linear_eight_bits.simd_size * 4)
     mixed_precision_cfg_list = [linear_eight_bits, four_bits_lut, two_bits_lut]
 

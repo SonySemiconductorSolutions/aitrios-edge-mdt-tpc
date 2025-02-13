@@ -12,33 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
-from enum import IntEnum
 from typing import List, Tuple
 
 import model_compression_toolkit.target_platform_capabilities.schema.v1 as schema
-
-
-class QuantizationMethod(IntEnum):
-    """
-    Method for quantization function selection:
-
-    POWER_OF_TWO - Symmetric, uniform, threshold is power of two quantization.
-
-    LUT_POT_QUANTIZER - quantization using a lookup table and power of 2 threshold.
-
-    SYMMETRIC - Symmetric, uniform, quantization.
-
-    UNIFORM - uniform quantization,
-
-    LUT_SYM_QUANTIZER - quantization using a lookup table and symmetric threshold.
-
-    """
-    POWER_OF_TWO = 0
-    LUT_POT_QUANTIZER = 1
-    SYMMETRIC = 2
-    UNIFORM = 3
-    LUT_SYM_QUANTIZER = 4
-
 
 # Default bitwidth for disabled quantization candidate
 FLOAT_BITWIDTH = 32
@@ -84,7 +60,7 @@ def get_op_quantization_configs() -> \
 
     # define a default quantization config for all non-specified weights attributes.
     default_weight_attr_config = schema.AttributeQuantizationConfig(
-        weights_quantization_method=QuantizationMethod.POWER_OF_TWO,
+        weights_quantization_method=schema.QuantizationMethod.POWER_OF_TWO,
         weights_n_bits=8,
         weights_per_channel_threshold=False,
         enable_weights_quantization=False,
@@ -92,7 +68,7 @@ def get_op_quantization_configs() -> \
 
     # define a quantization config to quantize the kernel (for layers where there is a kernel attribute).
     kernel_base_config = schema.AttributeQuantizationConfig(
-        weights_quantization_method=QuantizationMethod.SYMMETRIC,
+        weights_quantization_method=schema.QuantizationMethod.SYMMETRIC,
         weights_n_bits=8,
         weights_per_channel_threshold=True,
         enable_weights_quantization=True,
@@ -100,7 +76,7 @@ def get_op_quantization_configs() -> \
 
     # define a quantization config to quantize the bias (for layers where there is a bias attribute).
     bias_config = schema.AttributeQuantizationConfig(
-        weights_quantization_method=QuantizationMethod.POWER_OF_TWO,
+        weights_quantization_method=schema.QuantizationMethod.POWER_OF_TWO,
         weights_n_bits=FLOAT_BITWIDTH,
         weights_per_channel_threshold=False,
         enable_weights_quantization=False,
@@ -115,7 +91,7 @@ def get_op_quantization_configs() -> \
     eight_bits_default = schema.OpQuantizationConfig(
         default_weight_attr_config=default_weight_attr_config,
         attr_weights_configs_mapping={},
-        activation_quantization_method=QuantizationMethod.POWER_OF_TWO,
+        activation_quantization_method=schema.QuantizationMethod.POWER_OF_TWO,
         activation_n_bits=8,
         supported_input_activation_n_bits=8,
         enable_activation_quantization=True,
@@ -129,7 +105,7 @@ def get_op_quantization_configs() -> \
     linear_eight_bits = schema.OpQuantizationConfig(
         default_weight_attr_config=default_weight_attr_config,
         attr_weights_configs_mapping={KERNEL_ATTR: kernel_base_config, BIAS_ATTR: bias_config},
-        activation_quantization_method=QuantizationMethod.POWER_OF_TWO,
+        activation_quantization_method=schema.QuantizationMethod.POWER_OF_TWO,
         activation_n_bits=8,
         supported_input_activation_n_bits=8,
         enable_activation_quantization=True,
@@ -195,7 +171,7 @@ def generate_tp_model(default_config: schema.OpQuantizationConfig,
     const_config = default_config.clone_and_edit(
         default_weight_attr_config=default_config.default_weight_attr_config.clone_and_edit(
             enable_weights_quantization=True, weights_per_channel_threshold=True,
-            weights_quantization_method=QuantizationMethod.POWER_OF_TWO))
+            weights_quantization_method=schema.QuantizationMethod.POWER_OF_TWO))
     const_configuration_options = schema.QuantizationConfigOptions(quantization_configurations=tuple([const_config]))
 
     # 16 bits inputs and outputs. Currently, only defined for consts since they are used in operators that
@@ -213,7 +189,7 @@ def generate_tp_model(default_config: schema.OpQuantizationConfig,
         supported_input_activation_n_bits=(8, 16),
         default_weight_attr_config=default_config.default_weight_attr_config.clone_and_edit(
             enable_weights_quantization=True, weights_per_channel_threshold=False,
-            weights_quantization_method=QuantizationMethod.POWER_OF_TWO)
+            weights_quantization_method=schema.QuantizationMethod.POWER_OF_TWO)
     )
     const_config_input16_output16_per_tensor = const_config_input16_per_tensor.clone_and_edit(
         activation_n_bits=16, signedness=schema.Signedness.SIGNED)
