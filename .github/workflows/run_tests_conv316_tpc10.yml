@@ -15,5 +15,6 @@ jobs:
   run-tests:
     uses: ./.github/workflows/run_tests.yml
     with:
-      converter-version: "3.16"
+      converter-version: "3.16.*"
+      mct-version: "2.3.*"
       tpc-version: "1.0"
