@@ -13,13 +13,6 @@
 # limitations under the License.
 # ==============================================================================
 
-from setuptools import setup, find_packages
+from setuptools import setup
 
-
-def read_install_requires():
-    print("Reading install requirements")
-    return [r.split('\n')[0] for r in open('requirements.txt', 'r').readlines()]
-
-
-setup(packages=find_packages(include=["edgemdt_tpc", "edgemdt_tpc.*"], exclude=["*tests*"]),
-      install_requires=read_install_requires())
+setup()
