@@ -31,7 +31,7 @@ from edgemdt_tpc import get_target_platform_capabilities
 import model_compression_toolkit as mct
 
 # Get a TPC object representing the imx500 hardware and use it for PyTorch model quantization in MCT
-tpc = get_target_platform_capabilities(tpc_version='4.0', device_type='imx500')
+tpc = get_target_platform_capabilities(tpc_version='1.0', device_type='imx500')
 
 # Apply MCT on your pre-trained model using the TPC
 quantized_model, quantization_info = mct.ptq.pytorch_post_training_quantization(
@@ -46,10 +46,9 @@ quantized_model, quantization_info = mct.ptq.pytorch_post_training_quantization(
 <details id="supported-versions">
   <summary>Supported Versions Table</summary>
 
-|                       |                    TPC 1.0                                                                                                                                                                                                                                                                    |                    TPC 4.0                                                                                                                                                                                                                                                                      |
-|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| IMX500 Converter 3.14 | [![Run Tests](https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/actions/workflows/run_tests_conv314_tpc10.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/actions/workflows/run_tests_conv314_tpc10.yml) | <p align="center"> Not supported </p>                                                                                                                                                                                                                              |
-| IMX500 Converter 3.16 | [![Run Tests](https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/actions/workflows/run_tests_conv316_tpc10.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/actions/workflows/run_tests_conv316_tpc10.yml) | [![Run Tests](https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/actions/workflows/run_tests_conv316_tpc40.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/actions/workflows/run_tests_conv316_tpc40.yml) |
+|                       |                    TPC 1.0                                                                                                                                                                                                                                                                    |
+|-----------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| IMX500 Converter 3.14 | [![Run Tests](https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/actions/workflows/run_tests_conv314_tpc10.yml/badge.svg)](https://github.com/SonySemiconductorSolutions/aitrios-edge-mdt-tpc/actions/workflows/run_tests_conv314_tpc10.yml) |
 
 </details>
 

@@ -58,12 +58,6 @@ class APITest(unittest.TestCase):
         APIBaseTest(tpc_version='1', device_type="imx500", extended_version='lut').run_test(
             expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v1_0_lut", expected_tpc_version='1.0_lut')
 
-        # TPC v4.0
-        APIBaseTest(tpc_version='4.0', device_type="imx500").run_test(
-            expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v4_0", expected_tpc_version='4.0')
-        APIBaseTest(tpc_version='4', device_type="imx500").run_test(
-            expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v4_0", expected_tpc_version='4.0')
-
     def test_api_false_tpc_version(self):
 
         # TPC v1.8
