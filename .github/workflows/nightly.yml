@@ -1,0 +1,36 @@
+name: Nightly
+on:
+  workflow_dispatch:  # Allow manual triggers
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: update version
+        shell: bash
+        run: |
+          version=$(python -c 'import edgemdt_tpc; print(edgemdt_tpc.version.__version__)')
+          now=$(date +'%Y%m%d.%H%M%S')
+          echo "nightly_version=$version.$now" >> $GITHUB_ENV
+          echo "cat GITHUB_ENV"
+          cat $GITHUB_ENV
+          echo "__version__ = '${{ env.nightly_version }}'" >  edgemdt_tpc/version.py
+          echo "edgemdt_tpc/version.py content:"
+          cat edgemdt_tpc/version.py
+        
+          sed -i 's/name = edge-mdt-tpc/name = edge-mdt-tpc-nightly/' setup.cfg
+          echo "print setup.cfg"
+          cat setup.cfg
+
+      - name: Build nightly
+        shell: bash
+        run: |
+          pip install build
+          python -m build --wheel
