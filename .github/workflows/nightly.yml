@@ -13,14 +13,18 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: update version
+      - name: get nightly version
         shell: bash
         run: |
-          version=$(python -c 'import edgemdt_tpc; print(edgemdt_tpc.version.__version__)')
+          version="0.0.0"
           now=$(date +'%Y%m%d.%H%M%S')
           echo "nightly_version=$version.$now" >> $GITHUB_ENV
           echo "cat GITHUB_ENV"
           cat $GITHUB_ENV
+
+      - name: update name and version to dev
+        shell: bash
+        run: |
           echo "__version__ = '${{ env.nightly_version }}'" >  edgemdt_tpc/version.py
           echo "edgemdt_tpc/version.py content:"
           cat edgemdt_tpc/version.py
@@ -34,3 +38,9 @@ jobs:
         run: |
           pip install build
           python -m build --wheel
+
+      - name: Publish package pypi
+        shell: bash
+        run: |
+          pip install twine
+          twine upload --repository pypi dist/* -u __token__ -p ${{ secrets.PYPI_RELEASE_TOKEN }}
