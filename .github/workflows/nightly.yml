@@ -13,7 +13,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: update version
+      - name: get nightly version
         shell: bash
         run: |
           version="0.0.0"
@@ -21,6 +21,10 @@ jobs:
           echo "nightly_version=$version.$now" >> $GITHUB_ENV
           echo "cat GITHUB_ENV"
           cat $GITHUB_ENV
+
+      - name: update name and version to dev
+        shell: bash
+        run: |
           echo "__version__ = '${{ env.nightly_version }}'" >  edgemdt_tpc/version.py
           echo "edgemdt_tpc/version.py content:"
           cat edgemdt_tpc/version.py
