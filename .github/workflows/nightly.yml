@@ -23,7 +23,7 @@ jobs:
           latest_tag=$(git describe --tags --abbrev=0)          
           latest_tag_without_v=${latest_tag#v}
           now=$(date +'%Y%m%d.%H%M%S')
-          echo "nightly_version=latest_tag_without_v.$now" >> $GITHUB_ENV
+          echo "nightly_version=$latest_tag_without_v.$now" >> $GITHUB_ENV
           echo "cat GITHUB_ENV"
           cat $GITHUB_ENV
 
