@@ -19,7 +19,7 @@ ________________________________________________________________________________
 ### Quick Installation
 To install the TPC package, run:
 ```
-pip install edgemdt_tpc 
+pip install edge-mdt-tpc 
 ```
 
 ### Using the TPC
