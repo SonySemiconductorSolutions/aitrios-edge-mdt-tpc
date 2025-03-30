@@ -174,28 +174,28 @@ def generate_tp_model(default_config: schema.OpQuantizationConfig,
             weights_quantization_method=schema.QuantizationMethod.POWER_OF_TWO))
     const_configuration_options = schema.QuantizationConfigOptions(quantization_configurations=tuple([const_config]))
 
-    const_16_config = default_config.clone_and_edit(
-        default_weight_attr_config=default_config.default_weight_attr_config.clone_and_edit(
-            enable_weights_quantization=True, weights_per_channel_threshold=False, weights_n_bits=16,
-            weights_quantization_method=schema.QuantizationMethod.POWER_OF_TWO))
-    const_16_config_input16 = const_16_config.clone_and_edit(
-        supported_input_activation_n_bits=(8, 16))
-    const_16_config_input16_output16 = const_16_config_input16.clone_and_edit(
-        activation_n_bits=16, signedness=schema.Signedness.SIGNED)
-    const_16_configuration_options_inout16 = (
-        schema.QuantizationConfigOptions(quantization_configurations=tuple([const_16_config_input16_output16,
-                                                                            const_16_config_input16]),
-                                         base_config=const_16_config_input16))
-
     # 16 bits inputs and outputs. Currently, only defined for consts since they are used in operators that
     # support 16 bit as input and output.
     const_config_input16 = const_config.clone_and_edit(
         supported_input_activation_n_bits=(8, 16))
     const_config_input16_output16 = const_config_input16.clone_and_edit(
         activation_n_bits=16, signedness=schema.Signedness.SIGNED)
+
+    const_config_input16_weight16 = const_config_input16.clone_and_edit(
+        default_weight_attr_config=default_config.default_weight_attr_config.clone_and_edit(
+            enable_weights_quantization=True, weights_per_channel_threshold=False, weights_n_bits=16,
+            weights_quantization_method=schema.QuantizationMethod.POWER_OF_TWO))
+
+    const_config_input16_output16_weight16 = const_config_input16_output16.clone_and_edit(
+        default_weight_attr_config=default_config.default_weight_attr_config.clone_and_edit(
+            enable_weights_quantization=True, weights_per_channel_threshold=False, weights_n_bits=16,
+            weights_quantization_method=schema.QuantizationMethod.POWER_OF_TWO))
+
     const_configuration_options_inout16 = (
         schema.QuantizationConfigOptions(quantization_configurations=tuple([const_config_input16_output16,
-                                                                            const_config_input16]),
+                                                                            const_config_input16,
+                                                                            const_config_input16_output16_weight16,
+                                                                            const_config_input16_weight16]),
                                          base_config=const_config_input16))
 
     const_config_input16_per_tensor = const_config.clone_and_edit(
@@ -304,9 +304,9 @@ def generate_tp_model(default_config: schema.OpQuantizationConfig,
     relu6 = schema.OperatorsSet(name=schema.OperatorSetNames.RELU6, qc_options=default_config_options_16bit)
     leaky_relu = schema.OperatorsSet(name=schema.OperatorSetNames.LEAKY_RELU, qc_options=default_config_options_16bit)
     prelu = schema.OperatorsSet(name=schema.OperatorSetNames.PRELU, qc_options=default_config_options_16bit)
-    add = schema.OperatorsSet(name=schema.OperatorSetNames.ADD, qc_options=const_16_configuration_options_inout16)
+    add = schema.OperatorsSet(name=schema.OperatorSetNames.ADD, qc_options=const_configuration_options_inout16)
     sub = schema.OperatorsSet(name=schema.OperatorSetNames.SUB, qc_options=const_configuration_options_inout16)
-    mul = schema.OperatorsSet(name=schema.OperatorSetNames.MUL, qc_options=const_16_configuration_options_inout16)
+    mul = schema.OperatorsSet(name=schema.OperatorSetNames.MUL, qc_options=const_configuration_options_inout16)
     div = schema.OperatorsSet(name=schema.OperatorSetNames.DIV, qc_options=const_configuration_options)
     swish = schema.OperatorsSet(name=schema.OperatorSetNames.SWISH, qc_options=default_config_options_16bit)
     hardswish = schema.OperatorsSet(name=schema.OperatorSetNames.HARDSWISH, qc_options=default_config_options_16bit)
