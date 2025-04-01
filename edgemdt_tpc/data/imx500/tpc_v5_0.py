@@ -246,15 +246,27 @@ def generate_tp_model(default_config: schema.OpQuantizationConfig,
     operator_set.append(
         schema.OperatorsSet(name=schema.OperatorSetNames.SSD_POST_PROCESS, qc_options=no_quantization_config))
 
-    custom_layer_default_quantization_config = (default_configuration_options.clone_and_edit(
-        enable_activation_quantization=False, supported_input_activation_n_bits=(8, 16))
-                                                .clone_and_edit_weight_attribute(enable_weights_quantization=False))
-
+    ###################################
+    # Custom layers quantization config
+    ###################################
     operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.COMBINED_NON_MAX_SUPPRESSION,
-                                            qc_options=custom_layer_default_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.BOX_DECODE,
-                                            qc_options=custom_layer_default_quantization_config))
+                                            qc_options=(default_configuration_options
+                                                        .clone_and_edit(enable_activation_quantization=False,
+                                                                        supported_input_activation_n_bits=(8, 16))
+                                                        .clone_and_edit_weight_attribute(
+                                                                        enable_weights_quantization=False))))
 
+    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.BOX_DECODE,
+                                            qc_options=(default_configuration_options.
+                                                        clone_and_edit(enable_activation_quantization=True,
+                                                                       supported_input_activation_n_bits=(8, 16),
+                                                                       activation_n_bits=16,
+                                                                       signedness=schema.Signedness.SIGNED).
+                                                        clone_and_edit_weight_attribute(
+                                                                        enable_weights_quantization=False))))
+    ###################################
+    # Preserving quantization config
+    ###################################
     quant_preserving_config = (default_configuration_options.clone_and_edit(
         enable_activation_quantization=False,
         quantization_preserving=True).clone_and_edit_weight_attribute(enable_weights_quantization=False))
