@@ -22,6 +22,7 @@ FLOAT_BITWIDTH = 32
 # TP Attributes.
 KERNEL_ATTR = "kernel_attr"
 BIAS_ATTR = "bias_attr"
+POS_ATTR = "pos_attr"
 
 WEIGHTS_N_BITS = 'weights_n_bits'
 IMX500_TP_MODEL = 'imx500'
@@ -181,22 +182,28 @@ def generate_tp_model(default_config: schema.OpQuantizationConfig,
     const_config_input16_output16 = const_config_input16.clone_and_edit(
         activation_n_bits=16, signedness=schema.Signedness.SIGNED)
 
-    const_config_input16_weight16 = const_config_input16.clone_and_edit(
-        default_weight_attr_config=default_config.default_weight_attr_config.clone_and_edit(
-            enable_weights_quantization=True, weights_per_channel_threshold=False, weights_n_bits=16,
-            weights_quantization_method=schema.QuantizationMethod.POWER_OF_TWO))
+    # define a quantization config to quantize the positional weights into 16 bit (for layers where there is a
+    # positional weight attribute).
+    positional_weight_16_config = schema.AttributeQuantizationConfig(
+        weights_quantization_method=schema.QuantizationMethod.POWER_OF_TWO,
+        weights_n_bits=16,
+        weights_per_channel_threshold=False,
+        enable_weights_quantization=True,
+        lut_values_bitwidth=None)
 
-    const_config_input16_output16_weight16 = const_config_input16_output16.clone_and_edit(
-        default_weight_attr_config=default_config.default_weight_attr_config.clone_and_edit(
-            enable_weights_quantization=True, weights_per_channel_threshold=False, weights_n_bits=16,
-            weights_quantization_method=schema.QuantizationMethod.POWER_OF_TWO))
+    const_config_input16_positional_weight16 = const_config_input16.clone_and_edit(
+        attr_weights_configs_mapping={POS_ATTR: positional_weight_16_config})
+
+    const_config_input16_output16_positional_weight16 = const_config_input16_output16.clone_and_edit(
+        attr_weights_configs_mapping={POS_ATTR: positional_weight_16_config})
 
     const_configuration_options_inout16 = (
-        schema.QuantizationConfigOptions(quantization_configurations=tuple([const_config_input16_output16,
-                                                                            const_config_input16,
-                                                                            const_config_input16_output16_weight16,
-                                                                            const_config_input16_weight16]),
-                                         base_config=const_config_input16))
+        schema.QuantizationConfigOptions(quantization_configurations=tuple([
+            const_config_input16_output16,
+            const_config_input16,
+            const_config_input16_output16_positional_weight16,
+            const_config_input16_positional_weight16]),
+            base_config=const_config_input16))
 
     const_config_input16_per_tensor = const_config.clone_and_edit(
         supported_input_activation_n_bits=(8, 16),
