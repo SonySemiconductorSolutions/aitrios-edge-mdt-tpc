@@ -255,15 +255,6 @@ def generate_tp_model(default_config: schema.OpQuantizationConfig,
                                                                         supported_input_activation_n_bits=(8, 16))
                                                         .clone_and_edit_weight_attribute(
                                                                         enable_weights_quantization=False))))
-
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.BOX_DECODE,
-                                            qc_options=(default_configuration_options.
-                                                        clone_and_edit(enable_activation_quantization=True,
-                                                                       supported_input_activation_n_bits=(8, 16),
-                                                                       activation_n_bits=16,
-                                                                       signedness=schema.Signedness.SIGNED).
-                                                        clone_and_edit_weight_attribute(
-                                                                        enable_weights_quantization=False))))
     ###################################
     # Preserving quantization config
     ###################################
