@@ -184,7 +184,7 @@ def generate_tp_model(default_config: schema.OpQuantizationConfig,
 
     # define a quantization config to quantize the positional weights into 16 bit (for layers where there is a
     # positional weight attribute).
-    positional_weight_16_config = schema.AttributeQuantizationConfig(
+    positional_weight_16_attr_config = schema.AttributeQuantizationConfig(
         weights_quantization_method=schema.QuantizationMethod.POWER_OF_TWO,
         weights_n_bits=16,
         weights_per_channel_threshold=False,
@@ -192,10 +192,10 @@ def generate_tp_model(default_config: schema.OpQuantizationConfig,
         lut_values_bitwidth=None)
 
     const_config_input16_positional_weight16 = const_config_input16.clone_and_edit(
-        attr_weights_configs_mapping={POS_ATTR: positional_weight_16_config})
+        attr_weights_configs_mapping={POS_ATTR: positional_weight_16_attr_config})
 
     const_config_input16_output16_positional_weight16 = const_config_input16_output16.clone_and_edit(
-        attr_weights_configs_mapping={POS_ATTR: positional_weight_16_config})
+        attr_weights_configs_mapping={POS_ATTR: positional_weight_16_attr_config})
 
     const_configuration_options_inout16 = (
         schema.QuantizationConfigOptions(quantization_configurations=tuple([
