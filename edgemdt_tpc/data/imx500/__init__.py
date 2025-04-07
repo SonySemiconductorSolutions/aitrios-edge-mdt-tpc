@@ -21,6 +21,7 @@ from model_compression_toolkit.target_platform_capabilities.schema.mct_current_s
 V1 = '1.0'
 V1_LUT = '1.0_lut'
 V4 = '4.0'
+V5 = '5.0'
 
 
 def get_latest_version(version_dict: dict,
@@ -89,6 +90,7 @@ def generate_imx500_tpc(tpc_version: str) -> TargetPlatformCapabilities:
         V1: "edgemdt_tpc.data.imx500.tpc_v1_0",
         V1_LUT: "edgemdt_tpc.data.imx500.tpc_v1_0_lut",
         V4: "edgemdt_tpc.data.imx500.tpc_v4_0",
+        V5: "edgemdt_tpc.data.imx500.tpc_v5_0",
     }
 
     if tpc_version not in tpcs_dict:
