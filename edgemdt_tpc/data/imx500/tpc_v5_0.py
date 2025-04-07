@@ -249,12 +249,22 @@ def generate_tp_model(default_config: schema.OpQuantizationConfig,
     operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.EQUAL, qc_options=no_quantization_config))
     operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.ARGMAX, qc_options=no_quantization_config))
     operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.TOPK, qc_options=no_quantization_config))
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.COMBINED_NON_MAX_SUPPRESSION,
-                                            qc_options=no_quantization_config))
     operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.FAKE_QUANT, qc_options=no_quantization_config))
     operator_set.append(
         schema.OperatorsSet(name=schema.OperatorSetNames.SSD_POST_PROCESS, qc_options=no_quantization_config))
 
+    ###################################
+    # Custom layers quantization config
+    ###################################
+    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.COMBINED_NON_MAX_SUPPRESSION,
+                                            qc_options=(default_configuration_options
+                                                        .clone_and_edit(enable_activation_quantization=False,
+                                                                        supported_input_activation_n_bits=(8, 16))
+                                                        .clone_and_edit_weight_attribute(
+                                                                        enable_weights_quantization=False))))
+    ###################################
+    # Preserving quantization config
+    ###################################
     quant_preserving_config = (default_configuration_options.clone_and_edit(
         enable_activation_quantization=False,
         quantization_preserving=True).clone_and_edit_weight_attribute(enable_weights_quantization=False))
