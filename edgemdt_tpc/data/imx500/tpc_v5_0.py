@@ -219,6 +219,7 @@ def generate_tp_model(default_config: schema.OpQuantizationConfig,
         base_config=const_config_input16_per_tensor)
 
     qpreserving_const_config = const_config.clone_and_edit(enable_activation_quantization=False,
+                                                           supported_input_activation_n_bits=(8, 16),
                                                            quantization_preserving=True,
                                                            default_weight_attr_config=const_config.default_weight_attr_config.clone_and_edit(
                                                                weights_per_channel_threshold=False, weights_n_bits=16))
