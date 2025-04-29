@@ -22,7 +22,6 @@ FLOAT_BITWIDTH = 32
 # TP Attributes.
 KERNEL_ATTR = "kernel_attr"
 BIAS_ATTR = "bias_attr"
-POS_ATTR = "pos_attr"
 
 WEIGHTS_N_BITS = 'weights_n_bits'
 IMX500_TP_MODEL = 'imx500'
@@ -186,29 +185,10 @@ def generate_tp_model(default_config: schema.OpQuantizationConfig,
         supported_input_activation_n_bits=(8, 16))
     const_config_input16_output16 = const_config_input16.clone_and_edit(
         activation_n_bits=16, signedness=schema.Signedness.SIGNED)
-
-    # define a quantization config to quantize the positional weights into 16 bit (for layers where there is a
-    # positional weight attribute).
-    positional_weight_16_attr_config = schema.AttributeQuantizationConfig(
-        weights_quantization_method=schema.QuantizationMethod.POWER_OF_TWO,
-        weights_n_bits=16,
-        weights_per_channel_threshold=False,
-        enable_weights_quantization=True,
-        lut_values_bitwidth=None)
-
-    const_config_input16_positional_weight16 = const_config_input16.clone_and_edit(
-        attr_weights_configs_mapping={POS_ATTR: positional_weight_16_attr_config})
-
-    const_config_input16_output16_positional_weight16 = const_config_input16_output16.clone_and_edit(
-        attr_weights_configs_mapping={POS_ATTR: positional_weight_16_attr_config})
-
     const_configuration_options_inout16 = (
-        schema.QuantizationConfigOptions(quantization_configurations=tuple([
-            const_config_input16_output16,
-            const_config_input16,
-            const_config_input16_output16_positional_weight16,
-            const_config_input16_positional_weight16]),
-            base_config=const_config_input16))
+        schema.QuantizationConfigOptions(quantization_configurations=tuple([const_config_input16_output16,
+                                                                            const_config_input16]),
+                                         base_config=const_config_input16))
 
     const_config_input16_per_tensor = const_config.clone_and_edit(
         supported_input_activation_n_bits=(8, 16),
@@ -224,7 +204,6 @@ def generate_tp_model(default_config: schema.OpQuantizationConfig,
         base_config=const_config_input16_per_tensor)
 
     qpreserving_const_config = const_config.clone_and_edit(enable_activation_quantization=False,
-                                                           supported_input_activation_n_bits=(8, 16),
                                                            quantization_preserving=True,
                                                            default_weight_attr_config=const_config.default_weight_attr_config.clone_and_edit(
                                                                weights_per_channel_threshold=False, weights_n_bits=16))
@@ -255,22 +234,12 @@ def generate_tp_model(default_config: schema.OpQuantizationConfig,
     operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.EQUAL, qc_options=no_quantization_config))
     operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.ARGMAX, qc_options=no_quantization_config))
     operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.TOPK, qc_options=no_quantization_config))
+    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.COMBINED_NON_MAX_SUPPRESSION,
+                                            qc_options=no_quantization_config))
     operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.FAKE_QUANT, qc_options=no_quantization_config))
     operator_set.append(
         schema.OperatorsSet(name=schema.OperatorSetNames.SSD_POST_PROCESS, qc_options=no_quantization_config))
 
-    ###################################
-    # Custom layers quantization config
-    ###################################
-    operator_set.append(schema.OperatorsSet(name=schema.OperatorSetNames.COMBINED_NON_MAX_SUPPRESSION,
-                                            qc_options=(default_configuration_options
-                                                        .clone_and_edit(enable_activation_quantization=False,
-                                                                        supported_input_activation_n_bits=(8, 16))
-                                                        .clone_and_edit_weight_attribute(
-                                                                        enable_weights_quantization=False))))
-    ###################################
-    # Preserving quantization config
-    ###################################
     quant_preserving_config = (default_configuration_options.clone_and_edit(
         enable_activation_quantization=False,
         quantization_preserving=True).clone_and_edit_weight_attribute(enable_weights_quantization=False))
@@ -369,8 +338,8 @@ def generate_tp_model(default_config: schema.OpQuantizationConfig,
     # unless specified otherwise (see OperatorsSet, for example):
     generated_tpm = schema.TargetPlatformCapabilities(
         default_qco=default_configuration_options,
-        tpc_minor_version=5,
-        tpc_patch_version=0,
+        tpc_minor_version=4,
+        tpc_patch_version=1,
         tpc_platform_type=IMX500_TP_MODEL,
         operator_set=tuple(operator_set),
         fusing_patterns=tuple(fusing_patterns),
