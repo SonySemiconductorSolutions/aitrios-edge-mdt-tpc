@@ -369,7 +369,7 @@ def generate_tp_model(default_config: schema.OpQuantizationConfig,
     # unless specified otherwise (see OperatorsSet, for example):
     generated_tpm = schema.TargetPlatformCapabilities(
         default_qco=default_configuration_options,
-        tpc_minor_version=5,
+        tpc_minor_version=4,
         tpc_patch_version=0,
         tpc_platform_type=IMX500_TP_MODEL,
         operator_set=tuple(operator_set),
