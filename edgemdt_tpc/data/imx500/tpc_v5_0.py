@@ -333,10 +333,12 @@ def generate_tp_model(default_config: schema.OpQuantizationConfig,
     tanh = schema.OperatorsSet(name=schema.OperatorSetNames.TANH, qc_options=default_config_options_16bit)
     hard_tanh = schema.OperatorsSet(name=schema.OperatorSetNames.HARD_TANH, qc_options=default_config_options_16bit)
     exp = schema.OperatorsSet(name=schema.OperatorSetNames.EXP, qc_options=const_configuration_options_inout16)
+    sin = schema.OperatorsSet(name=schema.OperatorSetNames.SIN, qc_options=const_configuration_options_inout16)
+    cos = schema.OperatorsSet(name=schema.OperatorSetNames.COS, qc_options=const_configuration_options_inout16)
 
     operator_set.extend(
         [conv, conv_transpose, depthwise_conv, fc, relu, relu6, leaky_relu, add, sub, mul, div, prelu, swish, hardswish,
-         sigmoid, tanh, gelu, hardsigmoid, hard_tanh, exp])
+         sigmoid, tanh, gelu, hardsigmoid, hard_tanh, exp, sin, cos])
     any_relu = schema.OperatorSetGroup(operators_set=[relu, relu6, leaky_relu, hard_tanh])
 
     # Combine multiple operators into a single operator to avoid quantization between
