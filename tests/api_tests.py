@@ -63,11 +63,13 @@ class APITest(unittest.TestCase):
         APIBaseTest(tpc_version='4', device_type="imx500").run_test(
             expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v4_1", expected_tpc_version='4.1')
 
+        # TODO:
+        # Add these tests after MCT release (with schemaV2)
         # TPC v5.0
-        APIBaseTest(tpc_version='5.0', device_type="imx500").run_test(
-            expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v5_0", expected_tpc_version='4.0')
-        APIBaseTest(tpc_version='5', device_type="imx500").run_test(
-            expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v5_0", expected_tpc_version='4.0')
+        # APIBaseTest(tpc_version='5.0', device_type="imx500").run_test(
+        #     expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v5_0", expected_tpc_version='4.0')
+        # APIBaseTest(tpc_version='5', device_type="imx500").run_test(
+        #     expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v5_0", expected_tpc_version='4.0')
 
     def test_api_false_tpc_version(self):
         # TPC v1.8
