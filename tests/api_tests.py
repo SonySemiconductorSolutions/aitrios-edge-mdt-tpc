@@ -52,11 +52,17 @@ class APITest(unittest.TestCase):
         APIBaseTest(tpc_version='1.0', device_type="imx500").run_test(
             expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v1_0", expected_tpc_version='1.0')
         APIBaseTest(tpc_version='1', device_type="imx500").run_test(
-            expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v1_0", expected_tpc_version='1.0')
+            expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v1_1", expected_tpc_version='1.1')
         APIBaseTest(tpc_version='1.0', device_type="imx500", extended_version='lut').run_test(
             expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v1_0_lut", expected_tpc_version='1.0_lut')
         APIBaseTest(tpc_version='1', device_type="imx500", extended_version='lut').run_test(
-            expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v1_0_lut", expected_tpc_version='1.0_lut')
+            expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v1_1_lut", expected_tpc_version='1.1_lut')
+
+        # TPC v1.1
+        APIBaseTest(tpc_version='1.1', device_type="imx500").run_test(
+            expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v1_1", expected_tpc_version='1.1')
+        APIBaseTest(tpc_version='1.1', device_type="imx500", extended_version='lut').run_test(
+            expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v1_1_lut", expected_tpc_version='1.1_lut')
 
     def test_api_false_tpc_version(self):
 
