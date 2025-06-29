@@ -68,21 +68,21 @@ class APITest(unittest.TestCase):
 
         # TPC v1.8
         with pytest.raises(AssertionError, match="Error: The specified TPC version '1.8' is not valid. Available "
-                                                 "versions are: 1.0, 1.0_lut. Please ensure you are requesting a"
+                                                 "versions are: 1.0, 1.0_lut, 1.1, 1.1_lut. Please ensure you are requesting a"
                                                  " supported version."):
             APIBaseTest(tpc_version='1.8', device_type="imx500").run_test(
                 expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v1_0", expected_tpc_version='1.8')
 
         # TPC v1.3
         with pytest.raises(AssertionError, match="Error: The specified TPC version '1.3' is not valid. Available "
-                                                 "versions are: 1.0, 1.0_lut. Please ensure you are requesting a"
+                                                 "versions are: 1.0, 1.0_lut, 1.1, 1.1_lut. Please ensure you are requesting a"
                                                  " supported version."):
             APIBaseTest(tpc_version='1.3', device_type="imx500").run_test(
                 expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v1_0", expected_tpc_version='1.3')
 
         # TPC v4.0_lut
         with pytest.raises(AssertionError, match="Error: The specified TPC version '4.0_lut' is not valid. Available "
-                                                 "versions are: 1.0, 1.0_lut. Please ensure you are "
+                                                 "versions are: 1.0, 1.0_lut, 1.1, 1.1_lut. Please ensure you are "
                                                  "requesting a supported version."):
             APIBaseTest(tpc_version='4.0', device_type="imx500", extended_version='lut').run_test(
                 expected_tpc_path="edgemdt_tpc.data.imx500.tpc_v4_0", expected_tpc_version='4.0_lut')
