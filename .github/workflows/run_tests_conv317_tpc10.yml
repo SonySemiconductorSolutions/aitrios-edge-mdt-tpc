@@ -1,4 +1,4 @@
-name: Converter 3.14, TPC 1.0
+name: Converter 3.17, TPC 1.0
 on:
   workflow_dispatch: # Allow manual triggers
   schedule:
@@ -13,6 +13,6 @@ jobs:
   run-tests:
     uses: ./.github/workflows/run_tests.yml
     with:
-      converter-version: "3.14.*"
-      mct-version: "2.3.*"
+      converter-version: "3.17.*"
+      mct-version: "2.4.*"
       tpc-version: "1.0"
