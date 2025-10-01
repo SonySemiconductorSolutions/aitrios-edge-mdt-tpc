@@ -1,4 +1,4 @@
-name: API test
+name: TPC test
 on:
   workflow_dispatch: # Allow manual triggers
   schedule:
@@ -22,4 +22,4 @@ jobs:
           pip check
       - name: Run pytest
         run: |
-          pytest tests/api_tests.py
+          pytest tests/tpc_tests
