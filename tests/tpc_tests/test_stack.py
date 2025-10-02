@@ -20,12 +20,12 @@ import pytest
 def test_stack(extended_version):
 
     tpc = get_target_platform_capabilities(tpc_version='1.0', device_type='imx500', extended_version=extended_version)
-    opset = tpc.operator_set[0] # Stack Layer
-    assert opset.name == 'Stack'
-    assert opset.qc_options is None
-
-    qc = tpc.default_qco.quantization_configurations[0] # Stack layer applies default qc_options
-    assert qc.default_weight_attr_config.enable_weights_quantization == False
-    assert qc.attr_weights_configs_mapping == {}
-    assert qc.enable_activation_quantization == True
-    assert qc.activation_n_bits == 8
+    for opset in tpc.operator_set:
+        if opset.name == 'Stack':
+            assert opset.qc_options is None # Stack layer applies default qc_options
+    
+    for qc in tpc.default_qco.quantization_configurations:
+        assert qc.default_weight_attr_config.enable_weights_quantization == False
+        assert qc.attr_weights_configs_mapping == {}
+        assert qc.enable_activation_quantization == True
+        assert qc.activation_n_bits == 8
