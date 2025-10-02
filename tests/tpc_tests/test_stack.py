@@ -22,8 +22,9 @@ def test_stack(extended_version):
     tpc = get_target_platform_capabilities(tpc_version='1.0', device_type='imx500', extended_version=extended_version)
     opset = tpc.operator_set[0] # Stack Layer
     assert opset.name == 'Stack'
+    assert opset.qc_options is None
 
-    qc = opset.qc_options.quantization_configurations[0]
+    qc = tpc.default_qco.quantization_configurations[0] # Stack layer applies default qc_options
     assert qc.default_weight_attr_config.enable_weights_quantization == False
     assert qc.attr_weights_configs_mapping == {}
     assert qc.enable_activation_quantization == True

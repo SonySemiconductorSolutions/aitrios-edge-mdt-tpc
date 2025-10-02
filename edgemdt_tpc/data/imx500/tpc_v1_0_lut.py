@@ -173,10 +173,9 @@ def generate_tp_model(default_config: schema.OpQuantizationConfig,
 
     no_quantization_config = (default_configuration_options.clone_and_edit(enable_activation_quantization=False)
                               .clone_and_edit_weight_attribute(enable_weights_quantization=False))
-    stack_quantization_config = (default_configuration_options.clone_and_edit_weight_attribute(enable_weights_quantization=False))
 
     operator_set.append(
-        schema.OperatorsSet(name=schema.OperatorSetNames.STACK, qc_options=stack_quantization_config))
+        schema.OperatorsSet(name=schema.OperatorSetNames.STACK))
     operator_set.append(
         schema.OperatorsSet(name=schema.OperatorSetNames.UNSTACK, qc_options=no_quantization_config))
     operator_set.append(
