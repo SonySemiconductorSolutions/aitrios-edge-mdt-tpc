@@ -1,1 +1,1 @@
-model-compression-toolkit>= 2.3
+model-compression-toolkit @ git+https://github.com/SonySemiconductorSolutions/mct-model-optimization#egg=model-compression-toolkit
