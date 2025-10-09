@@ -1,0 +1,44 @@
+name: Test whl install
+on:
+  workflow_dispatch: # Allow manual triggers
+    inputs:
+      version:
+        type: string
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: update version
+        shell: bash
+        run: |
+          echo "__version__ = '${{ inputs.version }}'" >  edgemdt_tpc/version.py
+          echo "edgemdt_tpc/version.py content:"
+          cat edgemdt_tpc/version.py
+
+      - name: Build wheel
+        shell: bash
+        run: |
+          pip install build twine
+          python -m build --wheel
+
+      - name: Remove TPC code
+        run: |
+          rm -rf edgemdt_tpc
+
+      - name: Find whl file
+        run: |
+          echo "whl_file=$(find . -iname '*.whl')" >> $GITHUB_ENV
+          echo $whl_file
+          
+      - name: Install whl file
+        run: |
+          pip install "$whl_file"
+          pip list
