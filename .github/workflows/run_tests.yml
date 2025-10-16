@@ -27,7 +27,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install model-compression-toolkit==${{inputs.mct-version}}
           pip install imx500-converter[pt]==${{inputs.converter-version}}
-          pip install torch torchvision onnx onnxruntime onnxruntime-extensions
+          pip install "torch<2.7" "torchvision<0.22" "onnx<1.18" "onnxruntime<1.22" "onnxruntime-extensions<0.14"
           pip install pytest pytest-mock
           pip check
       - name: Run pytest
