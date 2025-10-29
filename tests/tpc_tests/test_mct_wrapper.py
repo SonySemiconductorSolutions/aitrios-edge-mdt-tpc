@@ -15,6 +15,8 @@
 from unittest.mock import Mock, patch
 from edgemdt_tpc.data import IMX500
 from model_compression_toolkit.wrapper.mct_wrapper import MCTWrapper
+from model_compression_toolkit.wrapper.constants import TPC_VERSION, DEVICE_TYPE, EXTENDED_VERSION
+from model_compression_toolkit.verify_packages import FOUND_TPC
 
 
 @patch('edgemdt_tpc.get_target_platform_capabilities')
@@ -23,12 +25,13 @@ def test_get_tpc(mock_get_tpc):
     mock_get_tpc.return_value = mock_tpc
 
     mct_wrapper = MCTWrapper()
-    mct_wrapper.use_MCT_TPC = False
-    mct_wrapper._get_TPC()
+    mct_wrapper.use_internal_tpc = False
+    assert FOUND_TPC is True
+    mct_wrapper._get_tpc()
 
-    expected_params = {'tpc_version': mct_wrapper.params['tpc_version'],
-                       'device_type': IMX500,
-                       'extended_version': None}
+    expected_params = {TPC_VERSION: mct_wrapper.params[TPC_VERSION],
+                       DEVICE_TYPE: IMX500,
+                       EXTENDED_VERSION: None}
     
     mock_get_tpc.assert_called_once_with(**expected_params)
     assert mct_wrapper.tpc == mock_tpc
