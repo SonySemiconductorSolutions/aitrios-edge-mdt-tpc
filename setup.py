@@ -15,4 +15,4 @@
 
 from setuptools import setup
 
-setup(python_requires='>=3.9')
+setup(python_requires='>=3.10')
