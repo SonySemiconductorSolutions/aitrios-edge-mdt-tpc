@@ -23,6 +23,7 @@ V1_LUT = '1.0_lut'
 V4 = '4.0'
 V4_1 = '4.1'
 V5 = '5.0'
+V6 = '6.0'
 
 
 def get_latest_version(version_dict: dict,
@@ -93,6 +94,7 @@ def generate_imx500_tpc(tpc_version: str) -> TargetPlatformCapabilities:
         V4: "edgemdt_tpc.data.imx500.tpc_v4_0",
         V4_1: "edgemdt_tpc.data.imx500.tpc_v4_1",
         V5: "edgemdt_tpc.data.imx500.tpc_v5_0",
+        V6: "edgemdt_tpc.data.imx500.tpc_v6_0",
     }
 
     if tpc_version not in tpcs_dict:
