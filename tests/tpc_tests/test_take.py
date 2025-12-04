@@ -12,7 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ==============================================================================
+from edgemdt_tpc import get_target_platform_capabilities
 
-from setuptools import setup
 
-setup(python_requires='>=3.10')
+def test_take():
+
+    tpc = get_target_platform_capabilities(tpc_version='6.0', device_type='imx500')
+    assert 'Take' in [opset.name for opset in tpc.operator_set]
+    
+    for opset in tpc.operator_set:
+        if opset.name == 'Take':
+            for qc in opset.qc_options.quantization_configurations:
+                assert qc.default_weight_attr_config.enable_weights_quantization == False
+                assert qc.enable_activation_quantization == False
+                assert qc.quantization_preserving == True
+                assert qc.supported_input_activation_n_bits == (8, 16)
